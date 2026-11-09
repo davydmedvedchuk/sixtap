@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Sixtap: 6 taps and the price is ready. A phone-first estimator for kitchens, bathrooms and installation.">
+<meta name="theme-color" content="#f3f2ec">
+<title>Sixtap</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Jost:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout idea: a phone app. Home with category tiles and a bottom bar whose centre button starts a one-question-per-screen flow (big cards, big buttons, price at the end). Detail screens sit behind each tile. Two looks via data-look (eng light, night dark); no brand marks of other apps. */
+
+:root { --logo-bg:#ff6a1a; --logo-ink:#14181d; }
+:root, :root[data-look="eng"] {
+  --bg:#f3f2ec; --card:#fbfaf6; --ink:#14181d; --muted:#667079; --line:#cfcdc3;
+  --pri:#ff6a1a; --pri-ink:#14181d; --gold:#c2410c; --soft:#efe7de; --soft-ink:#14181d;
+  --warn:#8a4310; --warn-bg:#f6e8dc;
+  --banner:#14181d; --banner-ink:#ffffff; --cta:#ff6a1a; --on-cta:#14181d; --go-ink:#14181d; --deco:#ff6a1a;
+  --edge:rgba(20,24,29,.28);
+  --c-eco:#c9d3d6; --c-mid:#d9c9a6; --c-pro:#7d6a52; --wood:#a67c52; --glass:rgba(150,190,205,.38); --stone:#d6d0c4; --stone2:#3f4348; --splash:#b9c4c0; --wall:#e9e7df; --floor:#b7ad99; --counter:#6b7075; --plinth:#2b2e32; --handle:#d0d3d7;
+  --rs:10px; --rb:18px; --rp:999px; --rc:50%; --shadow:none; --bw:1px; --f-num:"IBM Plex Mono",ui-monospace,monospace;
+  --f-display:"Barlow Condensed","IBM Plex Sans",system-ui,sans-serif; --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --dw:600; --dt:uppercase; --ds:1.12; color-scheme:light;
+}
+/* night = same shapes and type, only colours change */
+:root[data-look="night"] {
+  --bg:#0c0f12; --card:#161b21; --ink:#f1f3f5; --muted:#98a2ad; --line:#2d353f;
+  --pri:#ff6a1a; --pri-ink:#14181d; --gold:#ff8a45; --soft:#232a32; --soft-ink:#ffb58a;
+  --warn:#ffb27a; --warn-bg:#2f2218;
+  --banner:#1a1f26; --banner-ink:#f1f3f5; --cta:#ff6a1a; --on-cta:#14181d; --go-ink:#14181d; --deco:#ff6a1a;
+  --edge:rgba(241,243,245,.30);
+  --c-eco:#5b7a78; --c-mid:#9c7a4e; --c-pro:#6d4f35; --wood:#8a5f3a; --glass:rgba(120,170,190,.30); --stone:#323b45; --stone2:#aab0b6; --splash:#3d4a4c; --wall:#1d2329; --floor:#4a4339; --counter:#8a9096; --plinth:#07090b; --handle:#c9ccd0;
+  color-scheme:dark;
+}
+* { box-sizing: border-box; }
+html, body, button, a, input, select, label { touch-action: manipulation; }
+html { -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px 120px; -webkit-tap-highlight-color: transparent;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+#app { max-width: 480px; margin: 0 auto; }
+.view { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: var(--dw); text-transform: var(--dt); margin: 0; letter-spacing: -.01em; }
+h1 { font-size: calc(26px * var(--ds)); line-height: 1.15; font-weight: 700; }
+h2 { font-size: 18px; font-weight: 600; }
+label, .lab { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; font-weight: 500; }
+input[type="text"], input[type="tel"], select { width: 100%; min-width: 0; font: 600 16px var(--f-body); color: var(--ink); background: var(--card); border: var(--bw) solid var(--line); border-radius: var(--rs); padding: 10px 12px; font-variant-numeric: tabular-nums; }
+input:disabled { opacity: .5; }
+input:focus-visible, select:focus-visible, button:focus-visible, summary:focus-visible, a:focus-visible { outline: 2.5px solid var(--gold); outline-offset: 2px; }
+button { font: 600 15px var(--f-body); cursor: pointer; border-radius: var(--rs); padding: 11px 16px; border: var(--bw) solid var(--line); background: var(--card); color: var(--ink); }
+button:disabled { opacity: .4; cursor: default; }
+button.pri { background: var(--pri); border-color: var(--pri); color: var(--pri-ink); }
+button.link { border: 0; background: transparent; color: var(--gold); padding: 8px 4px; }
+.icon { padding: 0; width: 36px; height: 38px; color: var(--muted); font-size: 18px; line-height: 1; border-radius: var(--rs); }
+.card { background: var(--card); border-radius: var(--rb); padding: 16px; border: 1px solid var(--line); }
+.hint { font-size: 13px; color: var(--muted); margin: 8px 0 0; }
+.hint a { color: var(--gold); }
+.warn { background: var(--warn-bg); color: var(--warn); border-radius: var(--rs); padding: 10px 12px; font-size: 14px; font-weight: 500; }
+[hidden] { display: none !important; }
+
+/* header of subpages */
+.vh { display: flex; align-items: center; gap: 10px; }
+.vh .back { width: 40px; height: 40px; padding: 0; border-radius: var(--rc); font-size: 20px; line-height: 1; flex: none; }
+.vh h1 { font-size: 22px; }
+
+/* home */
+.brand { display: flex; justify-content: space-between; align-items: center; font: 700 12px var(--f-display); letter-spacing: .16em; color: var(--gold); text-transform: uppercase; }
+.banner { background: var(--banner); color: var(--banner-ink); border-radius: var(--rb); padding: 20px; display: flex; flex-direction: column; gap: 6px; position: relative; overflow: hidden; }
+.banner h2 { font-size: calc(24px * var(--ds)); line-height: 1.15; max-width: 14ch; }
+.banner p { margin: 0 0 8px; font-size: 14px; opacity: .85; max-width: 26ch; }
+.banner .cta { align-self: flex-start; background: var(--cta); color: var(--on-cta); border: 0; font-weight: 700; padding: 12px 20px; border-radius: var(--rp); }
+.banner svg.deco { position: absolute; right: -14px; bottom: -18px; width: 150px; height: 150px; color: var(--deco); opacity: .16; }
+.last { font-size: 13px; opacity: .85; margin-top: 8px; }
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tile { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: var(--rb); padding: 14px; min-height: 132px; }
+.tile .ic { width: 56px; height: 56px; border-radius: var(--rc); background: var(--soft); color: var(--soft-ink); display: grid; place-items: center; }
+.tile .ic svg { width: 32px; height: 32px; }
+.tile b { font: 600 16px var(--f-display); }
+.tile small { color: var(--muted); font-size: 12px; font-weight: 500; margin-top: -8px; }
+.tile.soon { border-style: dashed; background: transparent; color: var(--muted); }
+.tile.soon .ic { background: transparent; border: 1.5px dashed var(--line); }
+
+/* tab bar */
+.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--card); border-top: 1px solid var(--line); padding: 8px max(16px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.tabs .in { max-width: 480px; margin: 0 auto; display: grid; grid-template-columns: 1fr 84px 1fr; align-items: end; }
+.tabs .tb { border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 12px; font-weight: 600; color: var(--muted); padding: 6px 0; }
+.tabs .tb svg { width: 26px; height: 26px; }
+.tabs .tb[aria-current="page"] { color: var(--ink); }
+.tabs .go { width: 60px; height: 60px; margin: -16px auto 0; border-radius: var(--rc); padding: 0; background: var(--pri); border: 4px solid var(--card); color: var(--go-ink); display: grid; place-items: center; box-shadow: var(--shadow); }
+.tabs .go svg { width: 32px; height: 32px; }
+.tabs .gl { grid-column: 2; text-align: center; font-size: 12px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+
+/* quick flow */
+.qtop { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.qtop .back, .qtop .close { width: 40px; height: 40px; padding: 0; border-radius: var(--rc); font-size: 20px; line-height: 1; }
+.dots { display: flex; gap: 6px; }
+.dots i { width: 22px; height: 5px; border-radius: 3px; background: var(--line); }
+.dots i.on { background: var(--gold); }
+.qh { font: var(--dw) calc(32px * var(--ds))/1.1 var(--f-display); text-transform: var(--dt); letter-spacing: -.02em; margin: 12px 0 2px; }
+.qs { color: var(--muted); font-size: 15px; margin: 0; }
+.car { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 18px -16px 0; padding: 4px 16px 14px; scrollbar-width: none; }
+.car::-webkit-scrollbar { display: none; }
+.sc { flex: 0 0 74%; scroll-snap-align: center; text-align: left; border-radius: var(--rb); padding: 22px 20px; min-height: 210px; display: flex; flex-direction: column; justify-content: space-between; border: calc(var(--bw) + .5px) solid var(--line); background: var(--card); }
+.sc[aria-pressed="true"] { border-color: var(--gold); }
+.sc .sw { width: 54px; height: 54px; border-radius: var(--rc); border: 1px solid rgba(0,0,0,.2); }
+.sc b { font: 700 28px var(--f-display); display: block; }
+.sc span.pp { color: var(--muted); font-size: 14px; font-weight: 500; }
+.big2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+.bb { border-radius: var(--rb); min-height: 150px; font: 700 24px var(--f-display); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 14px; border: calc(var(--bw) + .5px) solid var(--line); }
+.bb small { font: 500 13px var(--f-body); color: var(--muted); }
+.bb[aria-pressed="true"] { border-color: var(--gold); }
+.bb.yes { background: var(--pri); color: var(--pri-ink); border-color: var(--pri); }
+.big4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 22px; }
+.big4 .bb { min-height: 110px; font-size: 30px; }
+.lenbox { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; }
+.round { width: 72px; height: 72px; border-radius: var(--rc); padding: 0; font: 600 32px var(--f-body); line-height: 1; }
+.lenv { text-align: center; font: var(--dw) calc(44px * var(--ds)) var(--f-display); letter-spacing: -.02em; }
+.lenv small { display: block; font: 500 13px var(--f-body); color: var(--muted); letter-spacing: 0; }
+.chips { display: flex; gap: 8px; justify-content: center; margin: 14px 0; flex-wrap: wrap; }
+.chips button { border-radius: var(--rp); padding: 8px 14px; }
+.chips button[aria-pressed="true"] { background: var(--soft); border-color: var(--gold); }
+.next { width: 100%; padding: 16px; font-size: 17px; border-radius: var(--rs); margin-top: 6px; }
+.res { text-align: center; padding: 22px 16px; }
+.res .tt { font: var(--dw) calc(48px * var(--ds))/1.05 var(--f-display); letter-spacing: -.02em; margin: 6px 0; }
+.res .rg { color: var(--muted); font-weight: 600; }
+.res .lbl { font-size: 13px; color: var(--muted); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.rl { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); font-weight: 500; }
+.rl:last-child { border-bottom: 0; }
+.rl .v { font-weight: 700; white-space: nowrap; }
+.rl .v.off { color: var(--muted); font-weight: 500; }
+.rl-wrap { text-align: left; margin-top: 12px; }
+.rrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+
+/* kitchen detail */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border: 1px solid var(--line); border-radius: var(--rb); padding: 8px 8px 8px 16px; box-shadow: var(--shadow); }
+.tot .k { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.tot .v { display: block; font: 700 26px/1.05 var(--f-display); white-space: nowrap; }
+.tot .r { display: block; font-size: 11px; color: var(--muted); white-space: nowrap; font-weight: 500; }
+.seg { display: flex; background: var(--soft); border-radius: var(--rs); padding: 3px; flex: none; }
+.seg button { border: 0; background: transparent; border-radius: var(--rs); padding: 9px 9px; font-size: 12px; color: var(--soft-ink); }
+.seg button[aria-pressed="true"] { background: var(--pri); color: var(--pri-ink); }
+.pic { background: var(--card); border: 1px solid var(--line); border-radius: var(--rb); padding: 10px 10px 2px; overflow: hidden; }
+.pic svg { display: block; width: 100%; height: auto; max-width: 100%; }
+.pic .empty { padding: 36px 10px; text-align: center; color: var(--muted); font-size: 14px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.row .nm { font-weight: 600; }
+.row .sub { grid-column: 1; font-size: 12px; color: var(--muted); font-weight: 500; }
+.stp { grid-column: 2; grid-row: 1 / span 2; display: grid; grid-template-columns: 40px 78px 40px; gap: 6px; align-items: center; }
+.stp button { height: 40px; padding: 0; font-size: 20px; border-radius: var(--rs); }
+.stp input { text-align: center; height: 40px; padding: 4px; }
+.same { display: flex; gap: 10px; align-items: center; font-size: 14px; padding: 12px 0 0; margin: 0; color: var(--ink); font-weight: 500; }
+input[type="checkbox"] { width: 20px; height: 20px; margin: 0; accent-color: var(--gold); flex: none; }
+.grp { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 14px 0 2px; }
+.ln { padding: 9px 0; border-bottom: 1px solid var(--line); }
+.ln-top { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto 36px; gap: 10px; align-items: center; }
+.ln-top.nocb { grid-template-columns: minmax(0, 1fr) auto 36px; }
+.ln-top .nm { font: 600 15px var(--f-body); border: 0; background: transparent; padding: 4px 0; border-radius: 6px; }
+.ln-top .nm:focus { background: var(--card); padding: 4px 8px; }
+.ln-top .amt { font-weight: 700; white-space: nowrap; text-align: right; }
+.ln-top .amt.off { color: var(--muted); font-weight: 500; }
+.ln-sub { display: flex; align-items: center; gap: 6px; margin: 4px 0 0 32px; font-size: 12px; color: var(--muted); flex-wrap: wrap; font-weight: 500; }
+.nocbs .ln-sub { margin-left: 0; }
+.ln-sub input { width: 74px; padding: 5px 8px; font-size: 14px; border-radius: var(--rs); }
+.ln.off .nm, .ln.off .amt { opacity: .5; }
+.tl { display: flex; flex-direction: column; gap: 8px; }
+.tl .line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-weight: 500; }
+.tl .val { font-weight: 700; }
+.tl .big { border-top: 2px solid var(--ink); padding-top: 10px; font: 700 20px var(--f-display); }
+.tl .big .val { font-size: 26px; }
+.fields3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.pt { display: grid; grid-template-columns: 62px repeat(3, minmax(0, 1fr)); gap: 8px; align-items: center; }
+.pt .h { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.pt input { padding: 9px 6px; font-size: 15px; text-align: right; }
+.chip { display: inline-block; font: 700 10px var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--warn); background: var(--warn-bg); padding: 2px 8px; border-radius: var(--rp); margin-left: 6px; vertical-align: middle; }
+.past { display: grid; grid-template-columns: minmax(0, 1fr) 58px 76px 66px 36px; gap: 6px; align-items: center; padding: 5px 0; }
+.past input { padding: 8px 6px; font-size: 14px; }
+.past .pm { font-size: 12px; color: var(--muted); text-align: right; font-weight: 500; }
+.status { min-height: 1.3em; font-size: 12px; color: var(--muted); }
+.sec { display: flex; flex-direction: column; gap: 10px; }
+
+.ctl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: end; }
+.looks { display: flex; gap: 3px; background: var(--soft); padding: 3px; border-radius: var(--rp); width: 100%; height: 44px; }
+.looks button { flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; color: var(--soft-ink); border-radius: var(--rp); padding: 0 8px; font-size: 14px; font-weight: 600; text-transform: none; letter-spacing: 0; }
+.looks button[aria-pressed="true"] { background: var(--pri); color: var(--pri-ink); }
+.brand .looks { font-family: var(--f-body); }
+.brand { text-transform: none; letter-spacing: 0; }
+.wm { display: flex; align-items: center; gap: 12px; color: var(--ink); }
+.wm span { font: var(--dw) 26px/1 var(--f-display); letter-spacing: -.01em; text-transform: var(--dt); }
+.wm svg { flex: none; display: block; }
+/* iOS zooms the page when a field under 16px gets focus, so every field is at least 16px */
+input, select, textarea { font-size: 16px !important; }
+.langsel { width: 100%; min-width: 0; height: 44px; border-radius: var(--rp); background: var(--soft); color: var(--soft-ink); border-color: transparent; padding: 0 14px; font-weight: 600; }
+
+/* blueprint look: mono figures, graph-paper banner, title block */
+.res .tt, .lenv, .tot .v, .rl .v, .tl .val, .ln-top .amt, .pt input, .stp input, .past .pm { font-family: var(--f-num); }
+.res .tt { letter-spacing: -.04em; font-weight: 600; }
+.lenv { font-weight: 600; letter-spacing: -.04em; }
+.banner { background-image: linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px); background-size: 20px 20px; background-position: -1px -1px; }
+.card, .tile, .pic { border-color: var(--edge); }
+.tile .ic, .sc .sw { border: 1px solid var(--ink); background: transparent; }
+.tabs .go { border-width: 3px; }
+.tblk { border-radius: 10px; overflow: hidden; display: grid; grid-template-columns: 1.15fr 1.05fr 1fr; margin-top: 16px; border: 1px solid var(--ink); text-align: left; }
+.tblk > div { padding: 6px 9px; min-width: 0; border-left: 1px solid var(--ink); }
+.tblk > div:first-child { border-left: 0; display: flex; align-items: center; }
+.tblk .k { display: block; font: 500 9px var(--f-num); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.tblk .v { display: block; font: 600 13px var(--f-num); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tblk .wm span { font-size: 15px; }
+.res .tt, .tot .v { word-spacing: -.3em; }
+.tot .v { font-size: 22px; }
+.seg { min-width: 0; }
+.seg button { padding: 9px 5px; font-size: 11px; letter-spacing: 0; white-space: nowrap; }
+.tot { min-width: 0; flex: 0 1 auto; }
+:root[data-look="night"] .banner { border: 1px solid var(--line); }
+:root[data-look="night"] .banner svg.deco { opacity: .12; }
+</style>
+
+</head>
+<body>
+<div id="app">
+  <section class="view" id="v-home"></section>
+  <section class="view" id="v-quick" hidden></section>
+  <section class="view" id="v-setup" hidden></section>
+  <section class="view" id="v-bq" hidden></section>
+  <section class="view" id="v-mq" hidden></section>
+  <section class="view" id="v-kitchen" hidden></section>
+  <section class="view" id="v-bath" hidden></section>
+  <section class="view" id="v-mount" hidden></section>
+  <section class="view" id="v-prices" hidden></section>
+</div>
+<nav class="tabs" id="tabs" aria-label="Разделы"></nav>
+
+<script>
+(function () {
+  var SEGS = [['eco', 'Базовый'], ['mid', 'Стандарт'], ['pro', 'Расширенный']];
+  var ROUTES = ['home', 'setup', 'quick', 'bq', 'mq', 'kitchen', 'bath', 'mount', 'prices'];
+  var STORE = 'quick-price-v1';
+  var LOOKS = [['eng','Чертёж'],['night','Ночь']];
+  var uidn = 0;
+  var LANG = 'ru', LI = { uk: 0, en: 1, pt: 2 };
+  var I18N = {"Режим съёмки": ["Режим зйомки", "Recording mode", "Modo de gravação"], "Чистое приложение с первого экрана. Твои данные не трогаются: после обновления страницы они вернутся.": ["Чистий застосунок з першого екрана. Твої дані не змінюються: після оновлення сторінки вони повернуться.", "A clean app from the first screen. Your data is untouched: it comes back when you reload the page.", "Aplicação limpa desde o primeiro ecrã. Os teus dados não são alterados: voltam ao recarregar a página."], " · цена не задана": [" · ціна не задана", " · price not set", " · preço por definir"], " Расчёт: ": [" Розрахунок: ", " Estimate: ", " Cálculo: "], " Ремонт по м²: ": [" Ремонт по м²: ", " Per m²: ", " Por m²: "], " за ": [" за ", " per ", " por "], " за м.п.": [" за м.п.", " per lm", " por ml"], " за м² пола": [" за м² підлоги", " per m² of floor", " por m² de piso"], " за метр": [" за метр", " per metre", " por metro"], " за метр нижнего ряда.": [" за метр нижнього ряду.", " per metre of base row.", " por metro da linha inferior."], " м": [" м", " m", " m"], " м · ": [" м · ", " m · ", " m · "], " м, ": [" м, ", " m, ", " m, "], " м, верх ": [" м, верх ", " m, wall units ", " m, módulos altos "], " м, пеналы ": [" м, пенали ", " m, tall units ", " m, colunas "], " м.п. × ": [" м.п. × ", " lm × ", " ml × "], " м²": [" м²", " m²", " m²"], " м², потолок ": [" м², стеля ", " m², ceiling ", " m², teto "], " м², стены ": [" м², стіни ", " m², walls ", " m², paredes "], " м².": [" м².", " m².", " m²."], " минус 0,1 м": [" мінус 0,1 м", " minus 0.1 m", " menos 0,1 m"], " на ": [" на ", " by ", " por "], " плюс 0,1 м": [" плюс 0,1 м", " plus 0.1 m", " mais 0,1 m"], " поз.": [" поз.", " items", " itens"], " шт": [" шт", " pcs", " un."], "+ Кухня": ["+ Кухня", "+ Kitchen", "+ Cozinha"], "+ Позиция": ["+ Позиція", "+ Item", "+ Item"], ", допы: ": [", додатково: ", ", extras: ", ", extras: "], ", м.п.": [", м.п.", ", lm", ", ml"], ", разница ": [", різниця ", ", difference ", ", diferença "], ", € за м.п.": [", € за м.п.", ", € per lm", ", € por ml"], ", € за м² пола": [", € за м² підлоги", ", € per m² of floor", ", € por m² de piso"], ". Впиши в «Подробнее».": [". Впиши в «Докладніше».", ". Enter it in “Details”.", ". Preenche em «Detalhes»."], ". Впиши в разделе «Цены».": [". Впиши в розділі «Ціни».", ". Enter it in the “Prices” section.", ". Preenche na secção «Preços»."], "/м": ["/м", "/m", "/m"], ": минус 0,6 м": [": мінус 0,6 м", ": minus 0.6 m", ": menos 0,6 m"], ": плюс 0,6 м": [": плюс 0,6 м", ": plus 0.6 m", ": mais 0,6 m"], "Без названия": ["Без назви", "Untitled", "Sem nome"], "Без пеналов": ["Без пеналів", "No tall units", "Sem colunas"], "Биде": ["Біде", "Bidet", "Bidé"], "Бойлер": ["Бойлер", "Water heater", "Termoacumulador"], "Больше": ["Більше", "More", "Mais"], "Меньше": ["Менше", "Less", "Menos"], "Быстрая цена": ["Швидка ціна", "Quick price", "Preço rápido"], "Быстро": ["Швидко", "Quick", "Rápido"], "Базовый": ["Базовий", "Basic", "Base"], "Стандарт": ["Стандарт", "Standard", "Standard"], "Расширенный": ["Розширений", "Extended", "Avançado"], "базовый": ["базовий", "basic", "base"], "стандарт": ["стандарт", "standard", "standard"], "расширенный": ["розширений", "extended", "avançado"], "В базе стоят ориентиры на два яруса: 600, 800 и 1 250 € за метр, разделённые пополам между низом и верхом. Пенал равен сумме двух ярусов.": ["У базі стоять орієнтири на два яруси: 600, 800 та 1 250 € за метр, розділені навпіл між низом і верхом. Пенал дорівнює сумі двох ярусів.", "The defaults are guide prices for two tiers: 600, 800 and 1,250 € per metre, split in half between base and wall units. A tall unit equals the sum of two tiers.", "Os valores base são referências para dois níveis: 600, 800 e 1 250 € por metro, divididos entre módulos baixos e altos. Uma coluna vale a soma dos dois níveis."], "Ванна": ["Ванна", "Bathtub", "Banheira"], "Ванна ": ["Ванна ", "Bathroom ", "Casa de banho "], "Ванная": ["Ванна кімната", "Bathroom", "Casa de banho"], "Ванная ": ["Ванна кімната ", "Bathroom ", "Casa de banho "], "Ванная, ": ["Ванна кімната, ", "Bathroom, ", "Casa de banho, "], "Ванная, € за м² пола": ["Ванна кімната, € за м² підлоги", "Bathroom, € per m² of floor", "Casa de banho, € por m² de piso"], "Ванная: Habitissimo, обновлено 10.06.2026, 200–400 €/м² (средняя 300). По Лиссабону вся работа 700–2 500 €. Что входит в цену, на странице не сказано. <a href=\"https://www.habitissimo.pt/orcamentos/remodelar-casa-de-banho\" target=\"_blank\" rel=\"noopener\">Источник</a>.": ["Ванна кімната: Habitissimo, оновлено 10.06.2026, 200–400 €/м² (середня 300). По Лісабону вся робота 700–2 500 €. Що входить у ціну, на сторінці не сказано. <a href=\"https://www.habitissimo.pt/orcamentos/remodelar-casa-de-banho\" target=\"_blank\" rel=\"noopener\">Джерело</a>.", "Bathroom: Habitissimo, updated 10.06.2026, 200–400 €/m² (average 300). In Lisbon the whole job is 700–2,500 €. The page does not say what is included. <a href=\"https://www.habitissimo.pt/orcamentos/remodelar-casa-de-banho\" target=\"_blank\" rel=\"noopener\">Source</a>.", "Casa de banho: Habitissimo, atualizado a 10.06.2026, 200–400 €/m² (média 300). Em Lisboa a obra toda custa 700–2 500 €. A página não diz o que está incluído. <a href=\"https://www.habitissimo.pt/orcamentos/remodelar-casa-de-banho\" target=\"_blank\" rel=\"noopener\">Fonte</a>."], "Habitissimo, обновлено 10.06.2026, оценки по заявкам пользователей: прямая кухня 3,7 м около 3 000 € (≈810 €/м), 8 м термоламинат около 6 000 € (≈750 €/м), 10 м меламин около 6 000 € (≈600 €/м), 4 м МДФ лак 5 000 € (≈1 250 €/м). Состав цены на странице не указан. <a href=\"https://www.habitissimo.pt/orcamentos/fazer-cozinha-por-medida\" target=\"_blank\" rel=\"noopener\">Источник</a>.": ["Habitissimo, оновлено 10.06.2026, оцінки за заявками користувачів: пряма кухня 3,7 м близько 3 000 € (≈810 €/м), 8 м термоламінат близько 6 000 € (≈750 €/м), 10 м меламін близько 6 000 € (≈600 €/м), 4 м МДФ лак 5 000 € (≈1 250 €/м). Склад ціни на сторінці не вказано. <a href=\"https://www.habitissimo.pt/orcamentos/fazer-cozinha-por-medida\" target=\"_blank\" rel=\"noopener\">Джерело</a>.", "Habitissimo, updated 10.06.2026, estimates from user requests: straight kitchen 3.7 m about 3,000 € (≈810 €/m), 8 m thermolaminate about 6,000 € (≈750 €/m), 10 m melamine about 6,000 € (≈600 €/m), 4 m lacquered MDF 5,000 € (≈1,250 €/m). The page does not say what the price includes. <a href=\"https://www.habitissimo.pt/orcamentos/fazer-cozinha-por-medida\" target=\"_blank\" rel=\"noopener\">Source</a>.", "Habitissimo, atualizado a 10.06.2026, estimativas de pedidos de utilizadores: cozinha reta 3,7 m cerca de 3 000 € (≈810 €/m), 8 m termolaminado cerca de 6 000 € (≈750 €/m), 10 m melamina cerca de 6 000 € (≈600 €/m), 4 m MDF lacado 5 000 € (≈1 250 €/m). A página não indica o que o preço inclui. <a href=\"https://www.habitissimo.pt/orcamentos/fazer-cozinha-por-medida\" target=\"_blank\" rel=\"noopener\">Fonte</a>."], "Для сравнения монтаж по Zaask: 39–69 €/мл для кухонь IKEA, год на странице не указан. <a href=\"https://www.zaask.pt/quanto-custa/instalar-cozinhas-ikea\" target=\"_blank\" rel=\"noopener\">Источник</a>.": ["Для порівняння монтаж за Zaask: 39–69 €/мл для кухонь IKEA, рік на сторінці не вказано. <a href=\"https://www.zaask.pt/quanto-custa/instalar-cozinhas-ikea\" target=\"_blank\" rel=\"noopener\">Джерело</a>.", "For comparison, installation per Zaask: 39–69 €/lm for IKEA kitchens, the page gives no year. <a href=\"https://www.zaask.pt/quanto-custa/instalar-cozinhas-ikea\" target=\"_blank\" rel=\"noopener\">Source</a>.", "Para comparar, montagem segundo a Zaask: 39–69 €/ml para cozinhas IKEA, a página não indica o ano. <a href=\"https://www.zaask.pt/quanto-custa/instalar-cozinhas-ikea\" target=\"_blank\" rel=\"noopener\">Fonte</a>."], "Варочная панель (врезка)": ["Варильна поверхня (врізка)", "Hob (cut-in)", "Placa (corte)"], "Введи длину, и здесь появится кухня.": ["Введи довжину, і тут з’явиться кухня.", "Enter the length and the kitchen will appear here.", "Introduz o comprimento e a cozinha aparece aqui."], "Введи размеры.": ["Введи розміри.", "Enter the size.", "Introduz as medidas."], "Ввести вручную": ["Ввести вручну", "Enter manually", "Introduzir manualmente"], "Ввести длину вручную": ["Ввести довжину вручну", "Enter length manually", "Introduzir comprimento manualmente"], "Ввести размеры вручную": ["Ввести розміри вручну", "Enter size manually", "Introduzir medidas manualmente"], "Верх": ["Верх", "Wall", "Alto"], "Верх такой же, как низ": ["Верх такий самий, як низ", "Wall units same as base", "Módulos altos iguais aos baixos"], "Верхние шкафы?": ["Верхні шафи?", "Wall units?", "Módulos altos?"], "Верхний ряд": ["Верхній ряд", "Wall row", "Linha superior"], "Вид": ["Вигляд", "Look", "Aspeto"], "Вид приложения": ["Вигляд застосунку", "App look", "Aspeto da aplicação"], "Вилка": ["Вилка", "Range", "Intervalo"], "Вилка ±, %": ["Вилка ±, %", "Range ±, %", "Intervalo ±, %"], "Включить: ": ["Увімкнути: ", "Include: ", "Incluir: "], "Впиши количество у нужных позиций. Цены общие с кухней.": ["Впиши кількість у потрібних позицій. Ціни спільні з кухнею.", "Enter quantities for the items you need. Prices are shared with the kitchen.", "Indica as quantidades dos itens necessários. Os preços são os mesmos da cozinha."], "Все цены пустые. Впиши свои, работы допиши строкой «Работы».": ["Усі ціни порожні. Впиши свої, роботи допиши рядком «Роботи».", "All prices are empty. Enter your own and add labour as a “Labour” line.", "Todos os preços estão vazios. Preenche os teus e acrescenta a mão de obra numa linha «Trabalhos»."], "Высота, м": ["Висота, м", "Height, m", "Altura, m"], "Вытяжка": ["Витяжка", "Extractor hood", "Exaustor"], "Главная": ["Головна", "Home", "Início"], "Глубина столешницы, м": ["Глибина стільниці, м", "Worktop depth, m", "Profundidade da bancada, m"], "Да": ["Так", "Yes", "Sim"], "Дальше": ["Далі", "Next", "Seguinte"], "Демонтаж старой кухни": ["Демонтаж старої кухні", "Old kitchen removal", "Remoção da cozinha antiga"], "Длина и ширина комнаты, шаг 0,1 м.": ["Довжина і ширина кімнати, крок 0,1 м.", "Room length and width, step 0.1 m.", "Comprimento e largura da divisão, passo de 0,1 m."], "Длина нижнего ряда и цена без монтажа. Покажу цену за метр и сравню с расчётом.": ["Довжина нижнього ряду і ціна без монтажу. Покажу ціну за метр і порівняю з розрахунком.", "Base row length and price without installation. I will show the price per metre and compare it with the estimate.", "Comprimento da linha inferior e preço sem montagem. Mostro o preço por metro e comparo com o cálculo."], "Длина нижнего ряда, м": ["Довжина нижнього ряду, м", "Base row length, m", "Comprimento da linha inferior, m"], "Длина, м": ["Довжина, м", "Length, m", "Comprimento, m"], "Допы": ["Додатково", "Extras", "Extras"], "Доставка": ["Доставка", "Delivery", "Entrega"], "Доставка и подъём": ["Доставка та підйом", "Delivery and lifting", "Transporte e entrega"], "Душ": ["Душ", "Shower", "Duche"], "Закрыть": ["Закрити", "Close", "Fechar"], "Заново": ["Заново", "Restart", "Recomeçar"], "Иванов, Эштуриль": ["Іванов, Ештуріл", "Smith, Estoril", "Silva, Estoril"], "Изготовление кухни, € за м.п.": ["Виготовлення кухні, € за м.п.", "Kitchen manufacture, € per lm", "Fabrico da cozinha, € por ml"], "Изделие и монтаж.": ["Виріб і монтаж.", "The worktop and its installation.", "A bancada e a montagem."], "Изменить имя и телефон": ["Змінити ім’я і телефон", "Edit name and phone", "Alterar nome e telefone"], "Итог": ["Підсумок", "Summary", "Resumo"], "Итого": ["Разом", "Total", "Total"], "Какая ванная?": ["Яка ванна кімната?", "Which bathroom?", "Que casa de banho?"], "Какая кухня?": ["Яка кухня?", "Which kitchen?", "Que cozinha?"], "Какой размер?": ["Який розмір?", "What size?", "Que tamanho?"], "Клиент или адрес": ["Клієнт або адреса", "Client or address", "Cliente ou morada"], "Клиенту": ["Клієнту", "To the client", "Para o cliente"], "Количество, ": ["Кількість, ", "Quantity, ", "Quantidade, "], "Количество: ": ["Кількість: ", "Quantity: ", "Quantidade: "], "Копировать": ["Копіювати", "Copy", "Copiar"], "Кухня": ["Кухня", "Kitchen", "Cozinha"], "Кухня ": ["Кухня ", "Kitchen ", "Cozinha "], "Кухня за метр нижнего ряда": ["Кухня за метр нижнього ряду", "Kitchen per metre of base row", "Cozinha por metro da linha inferior"], "Листай и нажми на нужную.": ["Гортай і натисни на потрібну.", "Swipe and tap the one you need.", "Desliza e toca na que precisas."], "Минус 0,6 м": ["Мінус 0,6 м", "Minus 0.6 m", "Menos 0,6 m"], "Минус дверь и окно, м²": ["Мінус двері та вікно, м²", "Minus door and window, m²", "Menos porta e janela, m²"], "Мойка и смеситель": ["Мийка та змішувач", "Sink and tap", "Lava-loiça e torneira"], "Монтаж": ["Монтаж", "Installation", "Montagem"], "Монтаж · ": ["Монтаж · ", "Installation · ", "Montagem · "], "Монтаж верхнего яруса": ["Монтаж верхнього ярусу", "Wall units installation", "Montagem módulos altos"], "Монтаж и допы": ["Монтаж і додатково", "Installation and extras", "Montagem e extras"], "Монтаж нижнего яруса": ["Монтаж нижнього ярусу", "Base units installation", "Montagem módulos baixos"], "Монтаж пеналов": ["Монтаж пеналів", "Tall units installation", "Montagem colunas"], "Монтаж сантехники": ["Монтаж сантехніки", "Sanitaryware installation", "Montagem de sanitários"], "Монтаж столешницы": ["Монтаж стільниці", "Worktop installation", "Montagem bancada"], "Монтаж?": ["Монтаж?", "Installation?", "Montagem?"], "Нажимай на нужное, можно несколько.": ["Натискай на потрібне, можна кілька.", "Tap what you need, several are fine.", "Toca no que precisas, podes escolher vários."], "Назад": ["Назад", "Back", "Voltar"], "Название": ["Назва", "Name", "Nome"], "Название кухни": ["Назва кухні", "Kitchen name", "Nome da cozinha"], "Название позиции": ["Назва позиції", "Item name", "Nome do item"], "Начать": ["Почати", "Start", "Começar"], "Не нужен": ["Не потрібен", "Not needed", "Não preciso"], "Не нужна": ["Не потрібна", "Not needed", "Não preciso"], "Не удалось скопировать.": ["Не вдалося скопіювати.", "Could not copy.", "Não foi possível copiar."], "Не удалось сохранить на сервере. Данные остаются в этом браузере.": ["Не вдалося зберегти на сервері. Дані залишаються в цьому браузері.", "Could not save to the server. The data stays in this browser.", "Não foi possível guardar no servidor. Os dados ficam neste navegador."], "Нет": ["Ні", "No", "Não"], "Нет цены изготовления: ": ["Немає ціни виготовлення: ", "No manufacturing price: ", "Sem preço de fabrico: "], "Нет цены: ": ["Немає ціни: ", "No price: ", "Sem preço: "], "Нижний и верхний ярус, пеналы.": ["Нижній і верхній ярус, пенали.", "Base and wall units, tall units.", "Módulos baixos e altos, colunas."], "Нижний ряд": ["Нижній ряд", "Base row", "Linha inferior"], "Нижний ряд, м": ["Нижній ряд, м", "Base row, m", "Linha inferior, m"], "Нижний ряд. Шаг 0,6 м, как модуль.": ["Нижній ряд. Крок 0,6 м, як модуль.", "Base row. Step 0.6 m, like a module.", "Linha inferior. Passo de 0,6 m, como um módulo."], "Низ": ["Низ", "Base", "Baixo"], "Новая": ["Нова", "New", "Nova"], "Номера нет: в WhatsApp выбери контакт.": ["Номера немає: у WhatsApp обери контакт.", "No number: pick a contact in WhatsApp.", "Sem número: escolhe um contacto no WhatsApp."], "Ночь": ["Ніч", "Night", "Noite"], "Нужен": ["Потрібен", "Needed", "Preciso"], "Нужна": ["Потрібна", "Needed", "Preciso"], "ОК": ["ОК", "OK", "OK"], "Отвечай на вопросы, остальное посчитается само.": ["Відповідай на питання, решта порахується сама.", "Answer a few questions, the rest is calculated for you.", "Responde às perguntas, o resto é calculado."], "Откуда ориентиры": ["Звідки орієнтири", "Where the guide prices come from", "De onde vêm as referências"], "Отмена": ["Скасувати", "Cancel", "Cancelar"], "Пенал": ["Пенал", "Tall unit", "Coluna"], "Пеналы": ["Пенали", "Tall units", "Colunas"], "Пеналы?": ["Пенали?", "Tall units?", "Colunas?"], "План ванной ": ["План ванної ", "Bathroom plan ", "Planta da casa de banho "], "Плитка": ["Плитка", "Tiles", "Azulejos"], "Плитка, пол": ["Плитка, підлога", "Tiles, floor", "Azulejos, piso"], "Плитка, стены": ["Плитка, стіни", "Tiles, walls", "Azulejos, paredes"], "Площадь пола": ["Площа підлоги", "Floor area", "Área do piso"], "Плюс 0,6 м": ["Плюс 0,6 м", "Plus 0.6 m", "Mais 0,6 m"], "Подробнее": ["Докладніше", "Details", "Detalhes"], "Подсветка LED": ["Підсвітка LED", "LED lighting", "Iluminação LED"], "Позиции": ["Позиції", "Items", "Itens"], "Позиция": ["Позиція", "Item", "Item"], "Показать цену": ["Показати ціну", "Show price", "Ver preço"], "Пол ": ["Підлога ", "Floor ", "Piso "], "Потолок": ["Стеля", "Ceiling", "Teto"], "Работы": ["Роботи", "Labour", "Trabalhos"], "Размер": ["Розмір", "Size", "Tamanho"], "Раковина": ["Раковина", "Sink", "Lavatório"], "Ремонт": ["Ремонт", "Renovation", "Remodelação"], "Ремонт по м²": ["Ремонт за м²", "Renovation per m²", "Remodelação por m²"], "Сантехника": ["Сантехніка", "Sanitaryware", "Sanitários"], "Сверка с моими кухнями": ["Звірка з моїми кухнями", "Check against my kitchens", "Comparação com as minhas cozinhas"], "Сегмент": ["Сегмент", "Tier", "Gama"], "Сейчас в расчёте: кухня ": ["Зараз у розрахунку: кухня ", "Currently in the estimate: kitchen ", "Neste momento no cálculo: cozinha "], "Сервер недоступен. Данные сохраняются только в этом браузере.": ["Сервер недоступний. Дані зберігаються лише в цьому браузері.", "Server unavailable. The data is saved only in this browser.", "Servidor indisponível. Os dados ficam guardados só neste navegador."], "Сколько метров?": ["Скільки метрів?", "How many metres?", "Quantos metros?"], "Сколько штук по 0,6 м.": ["Скільки штук по 0,6 м.", "How many, 0.6 m each.", "Quantas, de 0,6 m cada."], "Сколько, ": ["Скільки, ", "How many, ", "Quantos, "], "Смеситель": ["Змішувач", "Tap", "Torneira"], "Смета": ["Кошторис", "Estimate", "Orçamento"], "Сохранено на главной.": ["Збережено на головній.", "Saved on the home screen.", "Guardado no início."], "Сохранено.": ["Збережено.", "Saved.", "Guardado."], "Сохранить": ["Зберегти", "Save", "Guardar"], "Сохранённые": ["Збережені", "Saved", "Guardados"], "Среднее по твоим: ": ["Середнє по твоїх: ", "Average of yours: ", "Média dos teus: "], "Стиралка, сушилка, посудомойка": ["Пральна, сушильна, посудомийна", "Washer, dryer, dishwasher", "Máquinas de lavar roupa, secar e loiça"], "Столешница": ["Стільниця", "Worktop", "Bancada"], "Столешница?": ["Стільниця?", "Worktop?", "Bancada?"], "Схема кухни: низ ": ["Схема кухні: низ ", "Kitchen diagram: base ", "Esquema da cozinha: baixo "], "Такой же длины, как низ.": ["Такої ж довжини, як низ.", "Same length as the base row.", "Do mesmo comprimento que os baixos."], "Текст скопирован.": ["Текст скопійовано.", "Text copied.", "Texto copiado."], "Телефон": ["Телефон", "Phone", "Telefone"], "Телефон клиента": ["Телефон клієнта", "Client phone", "Telefone do cliente"], "Техника: духовка, холодильник, микроволновка, кофемашина": ["Техніка: духовка, холодильник, мікрохвильовка, кавомашина", "Appliances: oven, fridge, microwave, coffee machine", "Eletrodomésticos: forno, frigorífico, micro-ondas, máquina de café"], "Удалить кухню": ["Видалити кухню", "Delete kitchen", "Eliminar cozinha"], "Удалить позицию": ["Видалити позицію", "Delete item", "Eliminar item"], "Удалить расчёт": ["Видалити розрахунок", "Delete estimate", "Eliminar cálculo"], "Удалить?": ["Видалити?", "Delete?", "Eliminar?"], "Укладка плитки": ["Укладання плитки", "Tiling", "Assentamento de azulejos"], "Унитаз": ["Унітаз", "Toilet", "Sanita"], "Цена без монтажа": ["Ціна без монтажу", "Price without installation", "Preço sem montagem"], "Цена за м² пола, работы с материалами. Позиции в «Ванная → Подробнее» добавляются сверху.": ["Ціна за м² підлоги, роботи з матеріалами. Позиції в «Ванна кімната → Докладніше» додаються зверху.", "Price per m² of floor, labour with materials. Items in “Bathroom → Details” are added on top.", "Preço por m² de piso, mão de obra com materiais. Os itens em «Casa de banho → Detalhes» são somados."], "Цена за м² это ориентир Habitissimo (200–400 €/м²), не твоя. Свою впиши в «Цены».": ["Ціна за м² це орієнтир Habitissimo (200–400 €/м²), не твоя. Свою впиши в «Ціни».", "The price per m² is a Habitissimo guide (200–400 €/m²), not yours. Enter your own in “Prices”.", "O preço por m² é uma referência da Habitissimo (200–400 €/m²), não o teu. Indica o teu em «Preços»."], "Цена за метр одного яруса. Пенал считается отдельно.": ["Ціна за метр одного ярусу. Пенал рахується окремо.", "Price per metre of one tier. A tall unit is counted separately.", "Preço por metro de um nível. A coluna conta-se à parte."], "Цена кухни за 6 нажатий": ["Ціна кухні за 6 натискань", "Kitchen price in 6 taps", "Preço da cozinha em 6 toques"], "Цена: ": ["Ціна: ", "Price: ", "Preço: "], "Цены": ["Ціни", "Prices", "Preços"], "Чертёж": ["Креслення", "Blueprint", "Planta"], "Что монтируем?": ["Що монтуємо?", "What are we installing?", "O que vamos montar?"], "Что ставим?": ["Що ставимо?", "What goes in?", "O que se instala?"], "Что считаем?": ["Що рахуємо?", "What are we pricing?", "O que vamos orçamentar?"], "Ширина, м": ["Ширина, м", "Width, m", "Largura, m"], "Язык сообщения": ["Мова повідомлення", "Message language", "Idioma da mensagem"], "вилка ": ["вилка ", "range ", "intervalo "], "глубина": ["глибина", "depth", "profundidade"], "длина": ["довжина", "length", "comprimento"], "м": ["м", "m", "m"], "м.п.": ["м.п.", "lm", "ml"], "м²": ["м²", "m²", "m²"], "модули и метры": ["модулі та метри", "modules and metres", "módulos e metros"], "не выбрана": ["не вибрана", "not selected", "não selecionada"], "не нужен": ["не потрібен", "not needed", "não preciso"], "не нужна": ["не потрібна", "not needed", "não preciso"], "нижний ряд, м": ["нижній ряд, м", "base row, m", "linha inferior, m"], "около ": ["близько ", "about ", "cerca de "], "ориентир": ["орієнтир", "guide", "referência"], "площадь и сантехника": ["площа і сантехніка", "area and sanitaryware", "área e sanitários"], "позиции": ["позиції", "items", "itens"], "позиций": ["позицій", "items", "itens"], "позиция": ["позиція", "item", "item"], "скоро": ["скоро", "soon", "em breve"], "только работа": ["лише робота", "labour only", "só mão de obra"], "усл.": ["посл.", "lot", "vb"], "цена": ["ціна", "price", "preço"], "цена за м² не задана": ["ціна за м² не задана", "price per m² not set", "preço por m² por definir"], "цена не задана": ["ціна не задана", "price not set", "preço por definir"], "цены не заданы": ["ціни не задані", "prices not set", "preços por definir"], "ширина": ["ширина", "width", "largura"], "шт": ["шт", "pcs", "un."], "Разделы": ["Розділи", "Sections", "Secções"], "Нет пеналов": ["Немає пеналів", "No tall units", "Sem colunas"]};
+  function T(k) { if (LANG === 'ru') return k; var e = I18N[k]; return (e && e[LI[LANG]]) || k; }
+  Object.assign(I18N, {"Дата": ["Дата", "Date", "Data"], "Лист": ["Аркуш", "Sheet", "Folha"]});
+  Object.assign(I18N, {"Сначала твои цены": ["Спочатку твої ціни", "Your prices first", "Primeiro os teus preços"], "Впиши свои цены или пропусти. Пока стоят ориентиры, их можно поменять позже.": ["Впиши свої ціни або пропусти. Поки стоять орієнтири, їх можна змінити пізніше.", "Enter your own prices or skip. Guide prices are used for now and can be changed later.", "Indica os teus preços ou salta. Por agora estão valores de referência, que podes mudar depois."], "Пропустить": ["Пропустити", "Skip", "Saltar"], "Цены кухни": ["Ціни кухні", "Kitchen prices", "Preços da cozinha"], "Ставки монтажа": ["Ставки монтажу", "Installation rates", "Valores de montagem"], "Цены ванной": ["Ціни ванної", "Bathroom prices", "Preços da casa de banho"], "Всё готово": ["Усе готово", "All set", "Tudo pronto"], "Сколько ты берёшь за метр каждого яруса. Пока стоят ориентиры.": ["Скільки ти береш за метр кожного ярусу. Поки стоять орієнтири.", "What you charge per metre of each tier. Guide prices are filled in for now.", "Quanto cobras por metro de cada nível. Por agora estão valores de referência."], "Столешница, € за м.п.": ["Стільниця, € за м.п.", "Worktop, € per lm", "Bancada, € por ml"], "Твои ставки в € за единицу. Остальное можно вписать в «Подробнее».": ["Твої ставки в € за одиницю. Решту можна вписати в «Докладніше».", "Your rates in € per unit. The rest can be entered in “Details”.", "Os teus valores em € por unidade. O resto podes indicar em «Detalhes»."], "€ за м² пола, работы с материалами.": ["€ за м² підлоги, роботи з матеріалами.", "€ per m² of floor, labour with materials.", "€ por m² de piso, mão de obra com materiais."], "Цены сохранены. Менять их можно в любой момент во вкладке «Цены».": ["Ціни збережено. Змінити їх можна будь-коли у вкладці «Ціни».", "Prices are saved. You can change them any time in the “Prices” tab.", "Preços guardados. Podes alterá-los a qualquer momento no separador «Preços»."], "Открыть приложение": ["Відкрити застосунок", "Open the app", "Abrir a aplicação"], "Настроить цены": ["Налаштувати ціни", "Set up prices", "Configurar preços"], "Язык": ["Мова", "Language", "Idioma"]});
+
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function num(v) { var n = parseFloat(String(v == null ? '' : v).replace(/\s/g, '').replace(',', '.')); return isFinite(n) ? n : 0; }
+  var LOC = { ru: 'ru-RU', uk: 'uk-UA', en: 'en-GB', pt: 'pt-PT' };
+  function moneyL(lg, n) { return n.toLocaleString(LOC[lg] || 'ru-RU', { minimumFractionDigits: (Math.round(n * 100) % 100) ? 2 : 0, maximumFractionDigits: 2 }) + ' €'; }
+  function qfL(lg, n) { return n.toLocaleString(LOC[lg] || 'ru-RU', { maximumFractionDigits: 2 }); }
+  function money(n) { return moneyL(LANG, n); }
+  function qf(n) { return qfL(LANG, n); }
+  function str(n) { return String(Math.round(n * 100) / 100).replace('.', LANG === 'en' ? '.' : ','); }
+
+  var ICONS = {
+    kitchen: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="7" width="36" height="12" rx="2"/><path d="M24 7v12"/><rect x="6" y="27" width="36" height="14" rx="2"/><path d="M6 32h36M24 32v9"/></svg>',
+    bath: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 26h36v4a9 9 0 0 1-9 9H15a9 9 0 0 1-9-9z"/><path d="M12 26V14a5 5 0 0 1 9-3"/><path d="M26 10v4M32 12v4M38 10v4"/></svg>',
+    mount: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M33 8a8 8 0 0 0-7 11L10 35a4 4 0 0 0 6 6l16-16a8 8 0 0 0 11-7l-5 4-5-1-1-5z"/></svg>',
+    plus: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M24 12v24M12 24h24"/></svg>',
+    bolt: '<svg viewBox="0 0 48 48" fill="currentColor"><path d="M27 4L10 27h11l-3 17 20-26H27z"/></svg>',
+    home: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22L24 8l16 14v18H8z"/><path d="M19 40V28h10v12"/></svg>',
+    tag: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8h18l14 14-16 16L8 24z"/><circle cx="17" cy="17" r="2.5"/></svg>'
+  };
+
+  function logoSvg(px) {
+    var d = []; for (var r = 0; r < 2; r++) for (var c = 0; c < 3; c++) d.push([14 + c * 18, 15 + r * 18, r === 1 && c === 2]);
+    var g = d.map(function (p) { return p[2] ? '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="9" fill="none" stroke="var(--logo-ink)" stroke-opacity=".55" stroke-width="2"/><circle cx="' + p[0] + '" cy="' + p[1] + '" r="5.5" fill="var(--logo-ink)"/>' : '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="4.5" fill="var(--logo-ink)" fill-opacity=".6"/>'; }).join('');
+    return '<svg viewBox="0 0 64 48" width="' + px + '" height="' + Math.round(px * 0.75) + '" role="img" aria-label="Sixtap"><rect x="0" y="0" width="64" height="48" rx="14" fill="var(--logo-bg)"/>' + g + '</svg>';
+  }
+  function wordmark(px) { var w = el('div', 'wm'); w.innerHTML = logoSvg(px); w.appendChild(el('span', '', 'Sixtap')); return w; }
+  /* ---------- state ---------- */
+  var DEFAULT_LINES = [
+    { id: 'top_item', name: 'Столешница', unit: 'м.п.', price: '', auto: 'low', on: true, nomount: true, grp: 'Кухня' },
+    { id: 'mt_low', name: 'Монтаж нижнего яруса', unit: 'м.п.', price: '75', auto: 'low', on: true },
+    { id: 'mt_up', name: 'Монтаж верхнего яруса', unit: 'м.п.', price: '75', auto: 'up', on: true },
+    { id: 'mt_tall', name: 'Монтаж пеналов', unit: 'м.п.', price: '150', auto: 'tall', on: true },
+    { id: 'mt_top', name: 'Монтаж столешницы', unit: 'м²', price: '150', auto: 'top', on: true },
+    { id: 'led', name: 'Подсветка LED', unit: 'м.п.', price: '45', qty: '', on: true },
+    { id: 'app', name: 'Техника: духовка, холодильник, микроволновка, кофемашина', unit: 'шт', price: '55', qty: '', on: true },
+    { id: 'boiler', name: 'Бойлер', unit: 'шт', price: '125', qty: '', on: true },
+    { id: 'wash', name: 'Стиралка, сушилка, посудомойка', unit: 'шт', price: '65', qty: '', on: true },
+    { id: 'hood', name: 'Вытяжка', unit: 'шт', price: '', qty: '', on: true },
+    { id: 'hob', name: 'Варочная панель (врезка)', unit: 'шт', price: '', qty: '', on: true },
+    { id: 'sink', name: 'Мойка и смеситель', unit: 'шт', price: '', qty: '', on: true },
+    { id: 'demo', name: 'Демонтаж старой кухни', unit: 'усл.', price: '', qty: '', on: true },
+    { id: 'deliv', name: 'Доставка и подъём', unit: 'усл.', price: '', qty: '', on: true }
+  ];
+  var DEFAULT_BATH = [
+    { id: 'b_floor', name: 'Плитка, пол', unit: 'м²', price: '', auto: 'floor', on: true, grp: 'Плитка' },
+    { id: 'b_wall', name: 'Плитка, стены', unit: 'м²', price: '', auto: 'wall', on: true },
+    { id: 'b_ceil', name: 'Потолок', unit: 'м²', price: '', auto: 'ceil', on: false },
+    { id: 'b_lay', name: 'Укладка плитки', unit: 'м²', price: '', auto: 'lay', on: true },
+    { id: 'b_wc', name: 'Унитаз', unit: 'шт', price: '', qty: '1', on: true, fix: true, grp: 'Сантехника' },
+    { id: 'b_bidet', name: 'Биде', unit: 'шт', price: '', qty: '', on: true, fix: true },
+    { id: 'b_shower', name: 'Душ', unit: 'шт', price: '', qty: '1', on: true, fix: true },
+    { id: 'b_tub', name: 'Ванна', unit: 'шт', price: '', qty: '', on: true, fix: true },
+    { id: 'b_sink', name: 'Раковина', unit: 'шт', price: '', qty: '1', on: true, fix: true },
+    { id: 'b_tap', name: 'Смеситель', unit: 'шт', price: '', qty: '1', on: true, fix: true },
+    { id: 'b_mont', name: 'Монтаж сантехники', unit: 'шт', price: '', auto: 'fix', on: true },
+    { id: 'b_work', name: 'Работы', unit: 'усл.', price: '', qty: '1', on: true, grp: 'Работы' },
+    { id: 'b_deliv', name: 'Доставка', unit: 'усл.', price: '', qty: '', on: true }
+  ];
+  function detectLang() {
+    var list = []; try { list = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || '']; } catch (e) {}
+    for (var i = 0; i < list.length; i++) { var c = String(list[i] || '').toLowerCase().slice(0, 2); if (c === 'ru' || c === 'en' || c === 'pt') return c; if (c === 'uk') return 'uk'; }
+    return 'en';
+  }
+  function clone(a) { return a.map(function (l) { return Object.assign({}, l); }); }
+  function defaults() {
+    return {
+      seg: 'mid', spread: '15', same: true, depth: '0.6', orient: true,
+      run: { low: '3', up: '3', tall: '0,6' },
+      prices: { eco: { low: '300', up: '300', tall: '600' }, mid: { low: '400', up: '400', tall: '800' }, pro: { low: '625', up: '625', tall: '1250' } },
+      ob: false, saved: [], lang: detectLang(), langSet: false, msgLang: detectLang(), msgSet: false, msel: {}, bprices: { eco: '200', mid: '300', pro: '400' }, borient: true, look: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'night' : 'eng', lines: clone(DEFAULT_LINES), mq: {},
+      bath: { L: '2', W: '1.7', H: '2.5', open: '', lines: clone(DEFAULT_BATH) },
+      past: []
+    };
+  }
+  function mergeLines(have, defs) {
+    if (!Array.isArray(have)) return clone(defs);
+    var ids = {}; have.forEach(function (l) { ids[l.id] = 1; });
+    defs.forEach(function (d, i) { if (!ids[d.id]) have.splice(Math.min(i, have.length), 0, Object.assign({}, d)); });
+    // refresh structural fields of known default lines
+    have.forEach(function (l) { var d = defs.filter(function (x) { return x.id === l.id; })[0]; if (d) { l.auto = d.auto; l.grp = d.grp; l.nomount = d.nomount; l.fix = d.fix; l.unit = l.unit || d.unit; } });
+    return have;
+  }
+  function normalize(s) {
+    var b = defaults();
+    if (!s || typeof s !== 'object') return b;
+    s.run = Object.assign({}, b.run, s.run || {});
+    s.prices = s.prices || {};
+    SEGS.forEach(function (g) { s.prices[g[0]] = Object.assign({}, b.prices[g[0]], s.prices[g[0]] || {}); });
+    s.lines = mergeLines(s.lines, DEFAULT_LINES);
+    s.mq = s.mq || {}; s.msel = s.msel || {}; s.saved = Array.isArray(s.saved) ? s.saved : []; s.ob = !!s.ob; s.langSet = !!s.langSet; s.msgSet = !!s.msgSet;
+    if (!s.langSet || ['ru', 'uk', 'en', 'pt'].indexOf(s.lang) < 0) s.lang = detectLang();
+    if (!s.msgSet || ['ru', 'uk', 'en', 'pt'].indexOf(s.msgLang) < 0) s.msgLang = s.lang;
+    s.bprices = Object.assign({}, b.bprices, s.bprices || {}); if (s.borient == null) s.borient = true;
+    s.bath = Object.assign({}, b.bath, s.bath || {}); s.bath.lines = mergeLines(s.bath.lines, DEFAULT_BATH);
+    s.past = Array.isArray(s.past) ? s.past : [];
+    if (!LOOKS.some(function (l) { return l[0] === s.look; })) s.look = b.look;
+    ['seg', 'spread', 'same', 'depth', 'orient'].forEach(function (k) { if (s[k] == null) s[k] = b[k]; });
+    return s;
+  }
+  var state = (function () { try { var r = localStorage.getItem(STORE); if (r) return normalize(JSON.parse(r)); } catch (e) {} return defaults(); })();
+  LANG = state.lang;
+  var db = null, timer = null, saving = false, dirty = false;
+  function setStatus(t) { var s = $('status'); if (s) s.textContent = t || ''; }
+  var DEMO = false;
+  function persist() {
+    if (DEMO) return;
+    try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {}
+    if (!db) return; dirty = true; clearTimeout(timer); timer = setTimeout(flush, 700);
+  }
+  function flush() {
+    if (DEMO) return;
+    if (saving) { timer = setTimeout(flush, 400); return; }
+    saving = true; dirty = false;
+    db.doc('quick/state').set(JSON.parse(JSON.stringify(state))).then(function () { saving = false; setStatus(T('Сохранено.')); if (dirty) flush(); },
+      function () { saving = false; setStatus(T('Не удалось сохранить на сервере. Данные остаются в этом браузере.')); });
+  }
+
+  /* ---------- calculation ---------- */
+  function runs() { var low = num(state.run.low), up = state.same ? low : num(state.run.up), tall = num(state.run.tall); return { low: low, up: up, tall: tall }; }
+  var K = { // kitchen lines
+    qty: function (l) { var r = runs(); if (l.auto === 'low') return r.low; if (l.auto === 'up') return r.up; if (l.auto === 'tall') return r.tall; if (l.auto === 'top') return r.low * num(state.depth); return num(l.qty); },
+    raw: function (l) { return l.qty; }, set: function (l, v) { l.qty = v; }, auto: function (l) { return !!l.auto; }, check: true
+  };
+  function bathAreas() { var b = state.bath, L = num(b.L), W = num(b.W), H = num(b.H); return { floor: L * W, wall: Math.max(0, 2 * (L + W) * H - num(b.open)), ceil: L * W }; }
+  var B = {
+    qty: function (l) {
+      var a = bathAreas();
+      if (l.auto === 'floor') return a.floor; if (l.auto === 'wall') return a.wall; if (l.auto === 'ceil') return a.ceil;
+      if (l.auto === 'lay') { var c = state.bath.lines.filter(function (x) { return x.id === 'b_ceil'; })[0]; return a.floor + a.wall + (c && c.on ? a.ceil : 0); }
+      if (l.auto === 'fix') return state.bath.lines.reduce(function (s, x) { return s + (x.fix && x.on ? num(x.qty) : 0); }, 0);
+      return num(l.qty);
+    },
+    raw: function (l) { return l.qty; }, set: function (l, v) { l.qty = v; }, auto: function (l) { return !!l.auto; }, check: true
+  };
+  var M = { // mounting only
+    qty: function (l) { return num(state.mq[l.id]); }, raw: function (l) { return state.mq[l.id] || ''; }, set: function (l, v) { state.mq[l.id] = v; },
+    auto: function () { return false; }, check: false
+  };
+  function lineCost(l, ctx) { var q = ctx.qty(l), p = num(l.price); return ((ctx.check ? l.on : true) && q > 0 && p > 0) ? q * p : 0; }
+  function evaluate() {
+    var r = runs(), P = state.prices[state.seg];
+    var parts = [[T('Нижний ряд'), r.low, num(P.low)], [T('Верхний ряд'), r.up, num(P.up)], [T('Пеналы'), r.tall, num(P.tall)]];
+    var kitchen = parts.reduce(function (a, p) { return a + (p[1] > 0 && p[2] > 0 ? p[1] * p[2] : 0); }, 0);
+    var cost = {}; state.lines.forEach(function (l) { cost[l.id] = lineCost(l, K); });
+    var install = state.lines.reduce(function (a, l) { return a + cost[l.id]; }, 0);
+    var sp = Math.max(0, num(state.spread)) / 100;
+    var counter = cost.top_item + cost.mt_top, mount = cost.mt_low + cost.mt_up + cost.mt_tall;
+    return { r: r, parts: parts, kitchen: kitchen, cost: cost, install: install, total: kitchen + install, lo: kitchen * (1 - sp) + install, hi: kitchen * (1 + sp) + install, sp: sp, counter: counter, mount: mount, other: install - counter - mount };
+  }
+
+  /* ---------- kitchen picture ---------- */
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  function sv(tag, a, t) { var e = document.createElementNS(SVGNS, tag); for (var k in a) e.setAttribute(k, a[k]); if (t != null) e.textContent = t; return e; }
+  function drawPic(host, r) {
+    host.textContent = '';
+    var runM = Math.max(r.low, r.up), totalM = runM + r.tall;
+    if (!(totalM > 0)) { host.appendChild(el('div', 'empty', T('Введи длину, и здесь появится кухня.'))); return; }
+    var L = r.low * 1000, U = r.up * 1000, TL = r.tall * 1000, X0 = runM * 1000, W = totalM * 1000, H = 2400;
+    var pad = Math.max(W * 0.03, 90), floorB = 70, fs = Math.max(W * 0.035, 80), sw = Math.max(W, H) / 800;
+    var vx = -pad, vy = -pad * 0.6, vw = W + pad * 2, vh = H + floorB + fs * 2.4 + pad * 0.6, AR = 1.8;
+    if (vw / vh > AR) { var nh = vw / AR; vy -= (nh - vh) / 2; vh = nh; } else { var nw = vh * AR; vx -= (nw - vw) / 2; vw = nw; }
+    var svg = sv('svg', { viewBox: vx + ' ' + vy + ' ' + vw + ' ' + vh, role: 'img', 'aria-label': T('Схема кухни: низ ') + qf(r.low) + T(' м, верх ') + qf(r.up) + T(' м, пеналы ') + qf(r.tall) + T(' м') });
+    function Y(y) { return H - y; }
+    function rect(x, yb, w, h, style) { return sv('rect', { x: x, y: Y(yb + h), width: w, height: h, style: style }); }
+    var seg = state.seg, ST = ';stroke:rgba(0,0,0,.35);stroke-width:' + sw;
+    function fr(c) { return 'fill:var(--c-' + c + ')' + ST; }
+    function frontFor(kind) {
+      if (seg === 'mid') return kind === 'tall' ? fr('pro') : fr('mid');
+      if (seg === 'pro') return kind === 'up' ? 'fill:var(--glass);stroke:#14171a;stroke-width:' + (sw * 4) : kind === 'low' ? 'fill:var(--wood)' + ST : fr('pro');
+      return fr('eco');
+    }
+    var defs = sv('defs'), lg = sv('linearGradient', { id: 'ledg', x1: 0, y1: 0, x2: 0, y2: 1 });
+    lg.appendChild(sv('stop', { offset: '0', style: 'stop-color:#ffd9a0;stop-opacity:.75' })); lg.appendChild(sv('stop', { offset: '1', style: 'stop-color:#ffd9a0;stop-opacity:0' })); defs.appendChild(lg); svg.appendChild(defs);
+    svg.appendChild(sv('rect', { x: 0, y: 0, width: W, height: H, style: 'fill:var(--wall)' }));
+    svg.appendChild(sv('rect', { x: -pad * 0.4, y: H, width: W + pad * 0.8, height: floorB, style: 'fill:var(--floor)' }));
+    var RW = Math.max(L, U);
+    if (seg === 'mid' && RW > 0) svg.appendChild(rect(0, 904, RW, 150, 'fill:var(--splash)'));
+    if (seg === 'pro' && RW > 0) svg.appendChild(rect(0, 904, RW, 596, 'fill:var(--stone)'));
+    var hh = 12, hs = 'fill:var(--handle);stroke:rgba(0,0,0,.35);stroke-width:' + (sw * 0.6);
+    var BLK = 'fill:#14171a;stroke:none', DK = 'fill:#202428;stroke:#0c0d0f;stroke-width:' + sw, GL = 'fill:#3a4148;stroke:none', STL = 'fill:#c9cdd1;stroke:rgba(0,0,0,.4);stroke-width:' + sw, BAR = 'fill:#8d949a;stroke:none';
+    function hline(x1, x2, y) { svg.appendChild(sv('path', { d: 'M' + x1 + ' ' + Y(y) + ' H' + x2, style: 'stroke:rgba(0,0,0,.45);stroke-width:' + sw })); }
+    function appliance(role, dx, w) {
+      if (role === 'fridge') {
+        svg.appendChild(rect(dx + 12, 100, w - 24, 1700, seg === 'pro' ? DK : STL)); hline(dx + 12, dx + w - 12, 660);
+        svg.appendChild(rect(dx + w - 58, 760, 12, 420, BAR)); svg.appendChild(rect(dx + w - 58, 240, 12, 260, BAR));
+        hline(dx, dx + w, 1800);
+      } else {
+        hline(dx, dx + w, 700); hline(dx, dx + w, 1650);
+        svg.appendChild(rect(dx + 14, 710, w - 28, 580, DK)); svg.appendChild(rect(dx + 70, 770, w - 140, 400, GL)); svg.appendChild(rect(dx + 50, 1215, w - 100, 14, BAR));
+        svg.appendChild(rect(dx + 14, 1310, w - 28, 330, DK)); svg.appendChild(rect(dx + 44, 1350, (w - 28) * 0.6, 250, GL));
+        svg.appendChild(sv('circle', { cx: dx + w - 80, cy: Y(1475), r: 26, style: BAR }));
+      }
+    }
+    function cols(x0, len, yb, h, kind) {
+      var n = Math.max(1, Math.round(len / 600)), w = len / n;
+      for (var i = 0; i < n; i++) {
+        var dx = x0 + i * w, role = kind === 'tall' ? (n >= 2 ? (i === 0 ? 'fridge' : i === 1 ? 'oven' : '') : 'oven') : '';
+        svg.appendChild(rect(dx, yb, w, h, frontFor(kind)));
+        if (seg === 'pro' && kind === 'up') { [1, 2].forEach(function (k) { svg.appendChild(sv('path', { d: 'M' + (dx + w * 0.08) + ' ' + Y(yb + h * k / 3) + ' H' + (dx + w * 0.92), style: 'stroke:rgba(255,255,255,.55);stroke-width:' + (sw * 1.6) })); }); }
+        if (seg === 'pro' && kind === 'low') { [0.25, 0.5, 0.75].forEach(function (k) { svg.appendChild(sv('path', { d: 'M' + (dx + w * k) + ' ' + Y(yb + 8) + ' V' + Y(yb + h - 8), style: 'stroke:rgba(0,0,0,.2);stroke-width:' + sw })); }); }
+        if (role) appliance(role, dx, w);
+        if (seg === 'pro') {
+          if (kind === 'up') svg.appendChild(rect(dx, yb, w, 26, BLK)); else if (kind === 'low') svg.appendChild(rect(dx, yb + h - 26, w, 26, BLK)); else if (!role) svg.appendChild(rect(dx + w - 20, yb, 20, h, BLK));
+          continue;
+        }
+        if (role) continue;
+        var cx = dx + w / 2, hw = seg === 'mid' ? Math.min(w * 0.62, 300) : Math.min(w * 0.35, 150);
+        if (kind === 'low') svg.appendChild(sv('rect', { x: cx - hw / 2, y: Y(yb + h - 55), width: hw, height: hh, rx: 6, style: hs }));
+        else if (kind === 'up') svg.appendChild(sv('rect', { x: cx - hw / 2, y: Y(yb + 55), width: hw, height: hh, rx: 6, style: hs }));
+        else svg.appendChild(sv('rect', { x: dx + w - 50 - hh, y: Y(yb + 1000) - 90, width: hh, height: 180, rx: 6, style: hs }));
+      }
+    }
+    if (U > 0) cols(0, U, 1500, 720, 'up');
+    if (seg === 'pro' && U > 0) svg.appendChild(rect(0, 1190, U, 310, 'fill:url(#ledg);stroke:none'));
+    if (seg === 'pro' && U > 0) svg.appendChild(rect(0, 1494, U, 10, 'fill:#ffe2b0;stroke:none'));
+    if (L > 0) {
+      svg.appendChild(rect(0, 0, L, 100, 'fill:var(--plinth)')); cols(0, L, 100, 790, 'low');
+      if (seg === 'pro') svg.appendChild(rect(-10, 870, L + 20, 38, 'fill:var(--stone2)'));
+      else if (seg === 'mid') svg.appendChild(rect(-8, 880, L + 16, 24, 'fill:var(--counter)'));
+      else svg.appendChild(rect(-6, 890, L + 12, 14, 'fill:var(--counter)'));
+    }
+    if (TL > 0) { svg.appendChild(rect(X0, 0, TL, 100, 'fill:var(--plinth)')); cols(X0, TL, 100, 2120, 'tall'); }
+    var ry = H + floorB + fs * 0.4;
+    svg.appendChild(sv('path', { d: 'M0 ' + ry + ' H' + W, style: 'stroke:var(--muted);stroke-width:' + (sw * 0.8) + ';fill:none' }));
+    for (var m = 0; m <= totalM + 0.001; m += 1) {
+      svg.appendChild(sv('path', { d: 'M' + (m * 1000) + ' ' + (ry - fs * 0.25) + ' V' + (ry + fs * 0.25), style: 'stroke:var(--muted);stroke-width:' + (sw * 0.8) }));
+      svg.appendChild(sv('text', { x: m * 1000, y: ry + fs * 1.3, 'text-anchor': m === 0 ? 'start' : 'middle', style: 'fill:var(--muted);font:500 ' + fs + 'px var(--f-body)' }, String(m)));
+    }
+    svg.appendChild(sv('text', { x: W, y: ry + fs * 1.3, 'text-anchor': 'end', style: 'fill:var(--muted);font:700 ' + fs + 'px var(--f-body)' }, qf(totalM) + T(' м')));
+    host.appendChild(svg);
+  }
+
+  /* ---------- generic line list ---------- */
+  var cur = 'home';
+  function touch() { persist(); if (refreshers[cur]) refreshers[cur](); if (cur !== 'home' && refreshers.home && built.home) refreshers.home(); }
+  function buildList(host, lines, ctx, listRefs) {
+    host.textContent = ''; host.className = ctx.check ? '' : 'nocbs'; var lastG = null;
+    lines.forEach(function (l, i) {
+      if (l.grp && l.grp !== lastG) { host.appendChild(el('div', 'grp', T(l.grp))); lastG = l.grp; }
+      var row = el('div', 'ln'), top = el('div', 'ln-top' + (ctx.check ? '' : ' nocb'));
+      if (ctx.check) { var cb = el('input'); cb.type = 'checkbox'; cb.checked = !!l.on; cb.setAttribute('aria-label', T('Включить: ') + dn(l)); cb.addEventListener('change', function () { l.on = cb.checked; touch(); }); top.appendChild(cb); }
+      var nm = el('input', 'nm'); nm.type = 'text'; nm.value = dn(l); nm.placeholder = T('Название'); nm.autocomplete = 'off'; nm.setAttribute('aria-label', T('Название позиции'));
+      nm.addEventListener('input', function () { l.name = nm.value; persist(); }); top.appendChild(nm);
+      var amt = el('span', 'amt'); top.appendChild(amt);
+      if (l.custom) { var del = el('button', 'icon', '×'); del.type = 'button'; del.setAttribute('aria-label', T('Удалить позицию')); del.addEventListener('click', function () { lines.splice(lines.indexOf(l), 1); buildList(host, lines, ctx, listRefs); touch(); }); top.appendChild(del); } else top.appendChild(el('span'));
+      row.appendChild(top);
+      var sub = el('div', 'ln-sub'), qtxt = null;
+      if (ctx.auto(l)) { qtxt = el('span'); sub.appendChild(qtxt); }
+      else { var qi = el('input'); qi.type = 'text'; qi.inputMode = 'decimal'; qi.autocomplete = 'off'; qi.placeholder = '0'; qi.value = ctx.raw(l); qi.setAttribute('aria-label', T('Количество: ') + dn(l)); qi.addEventListener('input', function () { ctx.set(l, qi.value); touch(); }); sub.appendChild(qi); sub.appendChild(el('span', '', T(l.unit))); }
+      sub.appendChild(el('span', '', '×'));
+      var pi = el('input'); pi.type = 'text'; pi.inputMode = 'decimal'; pi.autocomplete = 'off'; pi.placeholder = T('цена'); pi.value = l.price; pi.setAttribute('aria-label', T('Цена: ') + dn(l));
+      pi.addEventListener('input', function () { l.price = pi.value; touch(); }); sub.appendChild(pi); sub.appendChild(el('span', '', '€'));
+      if (l.auto === 'top') {
+        var di = el('input'); di.type = 'text'; di.inputMode = 'decimal'; di.autocomplete = 'off'; di.value = state.depth; di.setAttribute('aria-label', T('Глубина столешницы, м'));
+        di.addEventListener('input', function () { state.depth = di.value; touch(); }); sub.appendChild(el('span', '', T('глубина'))); sub.appendChild(di); sub.appendChild(el('span', '', T('м')));
+      }
+      row.appendChild(sub); host.appendChild(row);
+      listRefs[l.id] = { row: row, amt: amt, qtxt: qtxt };
+    });
+  }
+  function refreshList(lines, ctx, listRefs) {
+    var sum = 0;
+    lines.forEach(function (l) {
+      var u = listRefs[l.id]; if (!u) return;
+      var c = lineCost(l, ctx); sum += c;
+      u.amt.textContent = c > 0 ? money(c) : '—'; u.amt.className = 'amt' + (c > 0 ? '' : ' off');
+      u.row.className = 'ln' + (ctx.check && !l.on ? ' off' : '');
+      if (u.qtxt) u.qtxt.textContent = qf(ctx.qty(l)) + ' ' + T(l.unit);
+    });
+    return sum;
+  }
+  function addCustom(lines, ctx, host, listRefs) {
+    lines.push({ id: 'u' + Date.now().toString(36) + (++uidn), name: '', unit: T('шт'), price: '', qty: '', on: true, custom: true });
+    buildList(host, lines, ctx, listRefs); touch();
+    var rows = host.querySelectorAll('.ln'); var last = rows[rows.length - 1]; if (last) { var i = last.querySelector('.nm'); if (i) i.focus(); }
+  }
+  function header(v, title) {
+    var h = el('div', 'vh'); var b = el('button', 'back', '←'); b.type = 'button'; b.setAttribute('aria-label', T('Назад')); b.addEventListener('click', function () { location.hash = 'home'; });
+    h.appendChild(b); h.appendChild(el('h1', '', title)); v.appendChild(h);
+  }
+
+  /* ---------- views ---------- */
+  var built = {}, builders = {}, refreshers = {};
+  var kRefs = {}, mRefs = {}, bRefs = {}, kUi = {};
+
+  function applyLook() { document.documentElement.setAttribute('data-look', state.look); Array.prototype.forEach.call(document.querySelectorAll('.looks button'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-k') === state.look)); }); }
+  var LANGS = [['ru', 'RU'], ['uk', 'UA'], ['en', 'EN'], ['pt', 'PT']];
+  function setLang(l) { state.lang = l; state.langSet = true; if (!state.msgSet) state.msgLang = l; LANG = l; document.documentElement.lang = l; persist(); built = {}; kRefs = {}; mRefs = {}; bRefs = {}; buildTabs(); show(cur); applyLook(); }
+  var LANG_NAMES = [['ru', 'Русский'], ['uk', 'Українська'], ['en', 'English'], ['pt', 'Português']];
+  function langSelect(cur, onPick, label) {
+    var sel = el('select', 'langsel'); sel.setAttribute('aria-label', label || T('Язык'));
+    LANG_NAMES.forEach(function (l) { var o = el('option', '', l[1]); o.value = l[0]; sel.appendChild(o); });
+    sel.value = cur; sel.addEventListener('change', function () { onPick(sel.value); }); return sel;
+  }
+  function langSwitch() { return langSelect(state.lang, setLang); }
+  function lookSwitch() {
+    var w = el('div', 'looks'); w.setAttribute('role', 'group'); w.setAttribute('aria-label', T('Вид'));
+    LOOKS.forEach(function (l) { var b = el('button', '', T(l[1])); b.type = 'button'; b.setAttribute('data-k', l[0]); b.addEventListener('click', function () { state.look = l[0]; applyLook(); persist(); }); w.appendChild(b); });
+    return w;
+  }
+
+  /* manual size entry (button reveals inputs) */
+  function manual(v, btnLabel, fields, onChange) {
+    var wrap = el('div'); wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:6px';
+    var btn = el('button', 'link', btnLabel); btn.type = 'button'; btn.setAttribute('aria-expanded', 'false');
+    var row = el('div'); row.hidden = true; row.style.cssText = 'display:flex;gap:10px;width:100%;justify-content:center';
+    var ins = fields.map(function (f) {
+      var w = el('div'); w.style.cssText = 'flex:1;min-width:0;max-width:170px'; var lb = el('label', '', f.label); var id = 'mn' + (++uidn); lb.setAttribute('for', id);
+      var i = el('input'); i.type = 'text'; i.id = id; i.inputMode = 'decimal'; i.autocomplete = 'off'; i.value = f.get();
+      i.addEventListener('input', function () { f.set(i.value); persist(); onChange(); }); w.appendChild(lb); w.appendChild(i); row.appendChild(w); return { i: i, f: f };
+    });
+    btn.addEventListener('click', function () { row.hidden = !row.hidden; btn.setAttribute('aria-expanded', String(!row.hidden)); if (!row.hidden && ins[0]) ins[0].i.focus(); });
+    wrap.appendChild(btn); wrap.appendChild(row); v.appendChild(wrap);
+    return function sync() { ins.forEach(function (x) { if (document.activeElement !== x.i) x.i.value = x.f.get(); }); };
+  }
+  /* saved estimates */
+  var curSaved = null, editId = null;
+  var DEFAULT_NAMES = {}; DEFAULT_LINES.concat(DEFAULT_BATH).forEach(function (l) { DEFAULT_NAMES[l.id] = l.name; });
+  function dn(l) { return (DEFAULT_NAMES[l.id] !== undefined && l.name === DEFAULT_NAMES[l.id]) ? T(l.name) : l.name; }
+  var TX = {
+    ru: { head: 'Предварительный расчёт', foot: 'Цена ориентировочная. Точную назову после замера.', total: 'Итого', counter: 'Столешница', mount: 'Монтаж', extras: 'Допы', m: 'м', unit: { 'м.п.': 'м.п.', 'м²': 'м²', 'шт': 'шт', 'усл.': 'усл.' },
+      seg: { eco: 'базовый', mid: 'стандарт', pro: 'расширенный' }, kit: function (n, sg) { return 'Кухня ' + n + ' м, ' + sg; }, bath: function (a, sg) { return 'Ванная ' + a + ' м, ' + sg; }, repair: 'Ремонт', lines: {} },
+    uk: { head: 'Попередній розрахунок', foot: 'Ціна орієнтовна. Точну назву після заміру.', total: 'Разом', counter: 'Стільниця', mount: 'Монтаж', extras: 'Додатково', m: 'м', unit: { 'м.п.': 'м.п.', 'м²': 'м²', 'шт': 'шт.', 'усл.': 'посл.' },
+      seg: { eco: 'базовий', mid: 'стандарт', pro: 'розширений' }, kit: function (n, sg) { return 'Кухня ' + n + ' м, ' + sg; }, bath: function (a, sg) { return 'Ванна ' + a + ' м, ' + sg; }, repair: 'Ремонт',
+      lines: { mt_low: 'Монтаж нижніх модулів', mt_up: 'Монтаж верхніх модулів', mt_tall: 'Монтаж пеналів', mt_top: 'Монтаж стільниці', led: 'LED-підсвітка', app: 'Техніка', boiler: 'Бойлер', wash: 'Пральна, сушильна, посудомийна', hood: 'Витяжка', hob: 'Варильна поверхня', sink: 'Мийка та змішувач', demo: 'Демонтаж старої кухні', deliv: 'Доставка та підйом' } },
+    en: { head: 'Preliminary estimate', foot: 'Approximate price. I will confirm the final one after measuring.', total: 'Total', counter: 'Worktop', mount: 'Installation', extras: 'Extras', m: 'm', unit: { 'м.п.': 'lm', 'м²': 'm²', 'шт': 'pcs', 'усл.': 'lot' },
+      seg: { eco: 'basic', mid: 'standard', pro: 'extended' }, kit: function (n, sg) { return 'Kitchen ' + n + ' m, ' + sg; }, bath: function (a, sg) { return 'Bathroom ' + a + ' m, ' + sg; }, repair: 'Renovation',
+      lines: { mt_low: 'Base units installation', mt_up: 'Wall units installation', mt_tall: 'Tall units installation', mt_top: 'Worktop installation', led: 'LED lighting', app: 'Appliances', boiler: 'Water heater', wash: 'Washer, dryer, dishwasher', hood: 'Extractor hood', hob: 'Hob', sink: 'Sink and tap', demo: 'Old kitchen removal', deliv: 'Delivery and lifting' } },
+    pt: { head: 'Orçamento preliminar', foot: 'Valor indicativo. O preço final depois da medição.', total: 'Total', counter: 'Bancada', mount: 'Montagem', extras: 'Extras', m: 'm', unit: { 'м.п.': 'ml', 'м²': 'm²', 'шт': 'un.', 'усл.': 'vb' },
+      seg: { eco: 'base', mid: 'standard', pro: 'avançada' }, kit: function (n, sg) { return 'Cozinha ' + n + ' m, gama ' + sg; }, bath: function (a, sg) { return 'Casa de banho ' + a + ' m, gama ' + sg; }, repair: 'Remodelação',
+      lines: { mt_low: 'Montagem módulos baixos', mt_up: 'Montagem módulos altos', mt_tall: 'Montagem colunas', mt_top: 'Montagem bancada', led: 'Iluminação LED', app: 'Eletrodomésticos', boiler: 'Termoacumulador', wash: 'Máquinas de lavar', hood: 'Exaustor', hob: 'Placa de cozinha', sink: 'Lava-loiça e torneira', demo: 'Remoção da cozinha antiga', deliv: 'Transporte e entrega' } }
+  };
+  function tx(lg) { return TX[lg] || TX.ru; }
+  function kText(ev, lg) {
+    var t = tx(lg), L = [t.head, '', t.kit(qfL(lg, ev.r.low), t.seg[state.seg]) + ': ' + moneyL(lg, ev.kitchen)];
+    if (ev.counter > 0) L.push(t.counter + ': ' + moneyL(lg, ev.counter));
+    if (ev.mount > 0) L.push(t.mount + ': ' + moneyL(lg, ev.mount));
+    if (ev.other > 0) L.push(t.extras + ': ' + moneyL(lg, ev.other));
+    L.push('', t.total + ': ' + moneyL(lg, ev.total), '', t.foot); return L.join('\n');
+  }
+  function bText(q, lg) {
+    var t = tx(lg), L = [t.head, '', t.bath(qfL(lg, num(state.bath.L)) + ' × ' + qfL(lg, num(state.bath.W)), t.seg[state.seg]) + ': ' + moneyL(lg, q.base)];
+    if (q.extras > 0) L.push(t.extras + ': ' + moneyL(lg, q.extras));
+    L.push('', t.total + ': ' + moneyL(lg, q.total), '', t.foot); return L.join('\n');
+  }
+  function mText(sel, lg) {
+    var t = tx(lg), L = [t.head, ''], total = 0;
+    sel.forEach(function (l) { var q = num(state.mq[l.id]), p = num(l.price), c = q > 0 && p > 0 ? q * p : 0; if (c > 0) { total += c; L.push((l.name === DEFAULT_NAMES[l.id] ? (t.lines[l.id] || l.name) : l.name) + ' (' + qfL(lg, q) + ' ' + (t.unit[l.unit] || l.unit) + '): ' + moneyL(lg, c)); } });
+    L.push('', t.total + ': ' + moneyL(lg, total), '', t.foot); return L.join('\n');
+  }
+  function waLink(phone, text) {
+    var d = String(phone || '').replace(/\D/g, ''); if (d.indexOf('00') === 0) d = d.slice(2); if (d.length === 9 && d[0] === '9') d = '351' + d;
+    return 'https://wa.me/' + d + '?text=' + encodeURIComponent(text);
+  }
+  function copyText(t, done) {
+    function fb() { try { var ta = document.createElement('textarea'); ta.value = t; ta.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); done(true); } catch (e) { done(false); } }
+    try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function () { done(true); }, fb); else fb(); } catch (e) { fb(); }
+  }
+  function clientBox(v, make) {
+    var card = el('div', 'card sec'); card.appendChild(el('h2', '', T('Клиенту')));
+    var item = curSaved;
+    var g = el('div'); g.style.cssText = 'display:grid;gap:10px';
+    function field(label, ph, mode, val) { var w = el('div'), id = 'cb' + (++uidn), lb = el('label', '', label); lb.setAttribute('for', id); var i = el('input'); i.type = mode === 'tel' ? 'tel' : 'text'; i.id = id; i.autocomplete = 'off'; if (mode) i.inputMode = mode; i.placeholder = ph; i.value = val || ''; w.appendChild(lb); w.appendChild(i); g.appendChild(w); return i; }
+    var ni = field(T('Клиент или адрес'), T('Иванов, Эштуриль'), '', item && item.name), pi = field(T('Телефон клиента'), '+351 9xx xxx xxx', 'tel', item && item.phone);
+    card.appendChild(g);
+    var ls = langSelect(state.msgLang, function (x) { state.msgLang = x; state.msgSet = true; persist(); upd(); }, T('Язык сообщения'));
+    var lh = el('div'); lh.appendChild(el('div', 'lab', T('Язык сообщения'))); lh.appendChild(ls); card.appendChild(lh);
+    var rr = el('div', 'rrow'); rr.style.gridTemplateColumns = 'repeat(3, minmax(0, 1fr))'; rr.style.gap = '8px';
+    var wa = el('a', '', 'WhatsApp'); wa.target = '_blank'; wa.rel = 'noopener'; wa.style.cssText = 'display:grid;place-items:center;text-decoration:none;font:600 15px var(--f-body);background:var(--pri);color:var(--pri-ink);border-radius:var(--rs);padding:11px 4px;min-width:0;border:var(--bw) solid var(--pri)';
+    var cp = el('button', '', T('Копировать')); cp.type = 'button'; var sv1 = el('button', '', T('Сохранить')); sv1.type = 'button'; cp.style.padding = sv1.style.padding = '11px 4px'; cp.style.minWidth = sv1.style.minWidth = '0';
+    rr.appendChild(sv1); rr.appendChild(cp); rr.appendChild(wa); card.appendChild(rr);
+    var st = el('div', 'hint'); st.style.margin = '0'; card.appendChild(st);
+    function text() { return make().text(state.msgLang); }
+    function upd() { wa.href = waLink(pi.value, text()); }
+    ni.addEventListener('input', upd); pi.addEventListener('input', upd);
+    cp.addEventListener('click', function () { copyText(text(), function (ok) { st.textContent = ok ? T('Текст скопирован.') : T('Не удалось скопировать.'); }); });
+    wa.addEventListener('click', function () { upd(); if (!pi.value.trim()) st.textContent = T('Номера нет: в WhatsApp выбери контакт.'); });
+    sv1.addEventListener('click', function () {
+      var m = make(); delete m.text; var nm = ni.value.trim() || T('Без названия'), ph = pi.value.trim();
+      if (item && state.saved.indexOf(item) >= 0) { Object.assign(item, m, { name: nm, phone: ph, ts: Date.now() }); }
+      else { m.id = 's' + Date.now().toString(36) + (++uidn); m.ts = Date.now(); m.name = nm; m.phone = ph; state.saved.unshift(m); item = m; curSaved = m; }
+      persist(); st.textContent = T('Сохранено на главной.');
+    });
+    upd(); v.appendChild(card);
+  }
+  function sumText(m) {
+    var mt = m.meta; if (!mt) return m.summary || '';
+    if (m.kind === 'kitchen') return T('Кухня ') + qf(mt.len) + T(' м · ') + T(segLabel(mt.seg));
+    if (m.kind === 'bath') return T('Ванная ') + qf(mt.L) + ' × ' + qf(mt.W) + T(' м · ') + T(segLabel(mt.seg));
+    return T('Монтаж · ') + mt.n + T(' поз.');
+  }
+  function segLabel(k) { return SEGS.filter(function (g) { return g[0] === k; })[0][1]; }
+  var KIND = { kitchen: 'Кухня', bath: 'Ванная', mount: 'Монтаж' };
+  function openSaved(m) {
+    var sn = m.snap || {}; curSaved = m;
+    if (m.kind === 'kitchen') {
+      state.seg = sn.seg || state.seg; state.same = !!sn.same; state.depth = sn.depth || state.depth; state.run = Object.assign({}, state.run, sn.run || {});
+      (sn.lines || []).forEach(function (x) { var l = state.lines.filter(function (y) { return y.id === x.id; })[0]; if (l) { l.on = x.on; l.qty = x.qty; } });
+      built.kitchen = false; persist(); qstep = QSTEPS.length; location.hash = 'quick';
+    } else if (m.kind === 'bath') {
+      state.seg = sn.seg || state.seg; state.bath.L = sn.L; state.bath.W = sn.W; state.bath.H = sn.H; state.bath.open = sn.open || '';
+      (sn.lines || []).forEach(function (x) { var l = state.bath.lines.filter(function (y) { return y.id === x.id; })[0]; if (l) { l.on = x.on; l.qty = x.qty; } });
+      built.bath = false; persist(); bqstep = BSTEPS.length; location.hash = 'bq';
+    } else {
+      state.msel = Object.assign({}, sn.msel || {}); state.mq = Object.assign({}, state.mq, sn.mq || {});
+      built.mount = false; persist(); mqstep = 999; location.hash = 'mq';
+    }
+  }
+  function renderSaved() {
+    var h = $('saved'); if (!h) return; h.textContent = '';
+    if (!state.saved.length) return;
+    h.appendChild(el('h2', '', T('Сохранённые')));
+    state.saved.forEach(function (m) {
+      var row = el('div', 'card'); row.style.cssText = 'display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:12px 14px';
+      var open = el('button'); open.type = 'button'; open.style.cssText = 'border:0;background:transparent;padding:0;text-align:left;display:grid;gap:2px;min-width:0';
+      var nm = el('b', '', m.name); nm.style.cssText = 'font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+      var d = new Date(m.ts), dt = isFinite(d) ? d.toLocaleDateString(LOC[LANG], { day: 'numeric', month: 'short' }) : '';
+      var sub = el('span', 'hint', sumText(m) + (dt ? ' · ' + dt : '') + (m.phone ? ' · ' + m.phone : '')); sub.style.margin = '0';
+      open.appendChild(nm); open.appendChild(sub); open.addEventListener('click', function () { openSaved(m); });
+      var right = el('div'); right.style.cssText = 'display:flex;align-items:center;gap:6px';
+      var tt = el('b', '', m.total > 0 ? money(m.total) : '—'); tt.style.whiteSpace = 'nowrap';
+      var del = el('button', 'icon', '×'); del.type = 'button'; del.setAttribute('aria-label', T('Удалить расчёт')); var armed = false, tm;
+      del.addEventListener('click', function () {
+        if (!armed) { armed = true; del.textContent = T('Удалить?'); del.style.width = 'auto'; del.style.padding = '0 8px'; del.style.fontSize = '12px'; tm = setTimeout(function () { armed = false; del.textContent = '×'; del.style.cssText = ''; }, 2500); }
+        else { clearTimeout(tm); state.saved.splice(state.saved.indexOf(m), 1); persist(); renderSaved(); }
+      });
+      var pen = el('button', 'icon', '✎'); pen.type = 'button'; pen.setAttribute('aria-label', T('Изменить имя и телефон')); pen.addEventListener('click', function () { editId = m.id; renderSaved(); });
+      right.appendChild(tt); right.appendChild(pen); right.appendChild(del);
+      if (editId === m.id) {
+        row.textContent = ''; row.style.gridTemplateColumns = '1fr'; row.style.gap = '8px';
+        var n1 = el('input'); n1.type = 'text'; n1.value = m.name; n1.placeholder = T('Клиент или адрес'); n1.setAttribute('aria-label', T('Клиент или адрес'));
+        var p1 = el('input'); p1.type = 'tel'; p1.inputMode = 'tel'; p1.value = m.phone || ''; p1.placeholder = T('Телефон'); p1.setAttribute('aria-label', T('Телефон клиента'));
+        var bb = el('div'); bb.style.cssText = 'display:flex;gap:8px'; var ok = el('button', 'pri', T('ОК')), cn = el('button', '', T('Отмена')); ok.type = 'button'; cn.type = 'button';
+        ok.addEventListener('click', function () { m.name = n1.value.trim() || T('Без названия'); m.phone = p1.value.trim(); editId = null; persist(); renderSaved(); });
+        cn.addEventListener('click', function () { editId = null; renderSaved(); });
+        bb.appendChild(ok); bb.appendChild(cn); row.appendChild(n1); row.appendChild(p1); row.appendChild(bb); h.appendChild(row); return;
+      }
+      row.appendChild(open); row.appendChild(right); h.appendChild(row);
+    });
+  }
+
+  /* home */
+  builders.home = function () {
+    var v = $('v-home'); v.textContent = '';
+    var br = el('div', 'brand'); br.appendChild(wordmark(44)); v.appendChild(br);
+    var ctl = el('div', 'ctl'); ctl.appendChild(lookSwitch()); ctl.appendChild(langSwitch()); v.appendChild(ctl);
+    v.appendChild(el('h1', '', T('Что считаем?')));
+    var bn = el('div', 'banner'); bn.appendChild(el('h2', '', T('Цена кухни за 6 нажатий')));
+    bn.appendChild(el('p', '', T('Отвечай на вопросы, остальное посчитается само.')));
+    var cta = el('button', 'cta', T('Начать')); cta.type = 'button'; cta.addEventListener('click', function () { qstep = 0; location.hash = 'quick'; }); bn.appendChild(cta);
+    var last = el('div', 'last'); last.id = 'lastCalc'; bn.appendChild(last);
+    var deco = el('div'); deco.innerHTML = ICONS.bolt.replace('<svg ', '<svg class="deco" '); bn.appendChild(deco.firstChild);
+    v.appendChild(bn);
+    var tiles = el('div', 'tiles');
+    [['kitchen', T('Кухня'), T('модули и метры'), 'kitchen'], ['bath', T('Ванная'), T('площадь и сантехника'), 'bq'], ['mount', T('Монтаж'), T('только работа'), 'mq']].forEach(function (t) {
+      var b = el('button', 'tile'); b.type = 'button'; var ic = el('span', 'ic'); ic.innerHTML = ICONS[t[0]]; b.appendChild(ic); b.appendChild(el('b', '', t[1])); b.appendChild(el('small', '', t[2]));
+      b.addEventListener('click', function () { if (t[3] === 'kitchen') { qstep = 0; location.hash = 'quick'; if (cur === 'quick') show('quick'); } else { if (t[3] === 'bq') bqstep = 0; if (t[3] === 'mq') mqstep = 0; location.hash = t[3]; } }); tiles.appendChild(b);
+    });
+    var soon = el('button', 'tile soon'); soon.type = 'button'; soon.disabled = true; var si = el('span', 'ic'); si.innerHTML = ICONS.plus; soon.appendChild(si); soon.appendChild(el('b', '', T('Новая'))); soon.appendChild(el('small', '', T('скоро'))); tiles.appendChild(soon);
+    v.appendChild(tiles);
+    var stl = el('button', 'link', T('Настроить цены')); stl.type = 'button'; stl.style.alignSelf = 'flex-start'; stl.addEventListener('click', function () { setupStep = 0; location.hash = 'setup'; }); v.appendChild(stl);
+    var sv0 = el('div', 'sec'); sv0.id = 'saved'; v.appendChild(sv0); renderSaved();
+    var st = el('div', 'status'); st.id = 'status'; v.appendChild(st);
+  };
+  refreshers.home = function () {
+    var ev = evaluate(), l = $('lastCalc'); if (!l) return;
+    l.textContent = ev.total > 0 ? T('Сейчас в расчёте: кухня ') + qf(ev.r.low) + T(' м, ') + (T(SEGS.filter(function (g) { return g[0] === state.seg; })[0][1])).toLowerCase() + ', ' + money(ev.total) : '';
+  };
+
+  /* tab bar */
+  function buildTabs() {
+    var t = $('tabs'); t.textContent = ''; t.setAttribute('aria-label', T('Разделы')); var inn = el('div', 'in');
+    function tab(name, label, icon) { var b = el('button', 'tb'); b.type = 'button'; b.innerHTML = ICONS[icon]; b.appendChild(el('span', '', label)); b.setAttribute('data-r', name); b.addEventListener('click', function () { location.hash = name; }); return b; }
+    inn.appendChild(tab('home', T('Главная'), 'home'));
+    var go = el('button', 'go'); go.type = 'button'; go.setAttribute('aria-label', T('Быстрая цена')); go.innerHTML = ICONS.bolt; go.addEventListener('click', function () { qstep = 0; location.hash = 'quick'; if (cur === 'quick') show('quick'); });
+    inn.appendChild(go);
+    inn.appendChild(tab('prices', T('Цены'), 'tag'));
+    inn.appendChild(el('div', 'gl', T('Быстро'))); t.appendChild(inn);
+    // the label under the centre button sits in the middle column of a second row
+    inn.lastChild.style.gridColumn = '2'; inn.lastChild.style.gridRow = '2';
+  }
+  function markTabs() { Array.prototype.forEach.call(document.querySelectorAll('#tabs .tb'), function (b) { if (b.getAttribute('data-r') === cur) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); }); }
+
+  /* quick flow */
+  var QSTEPS = ['seg', 'len', 'up', 'tall', 'top', 'mount'], qstep = 0;
+  function setOn(ids, on) { state.lines.forEach(function (l) { if (ids.indexOf(l.id) >= 0) l.on = on; }); }
+  function qnext() { qstep++; renderQuick(); }
+  function qtop(v) {
+    var t = el('div', 'qtop');
+    var b = el('button', 'back', qstep > 0 ? '←' : '×'); b.type = 'button'; b.setAttribute('aria-label', qstep > 0 ? T('Назад') : T('Закрыть'));
+    b.addEventListener('click', function () { if (qstep > 0) { qstep--; renderQuick(); } else location.hash = 'home'; }); t.appendChild(b);
+    var d = el('div', 'dots'); QSTEPS.forEach(function (s, i) { d.appendChild(el('i', i <= qstep ? 'on' : '')); }); t.appendChild(d);
+    var c = el('button', 'close', '×'); c.type = 'button'; c.setAttribute('aria-label', T('Закрыть')); c.addEventListener('click', function () { location.hash = 'home'; }); if (qstep === 0) c.style.visibility = 'hidden'; t.appendChild(c);
+    v.appendChild(t);
+  }
+  function yesNo(v, q, sub, yesLabel, noLabel, curYes, onPick) {
+    v.appendChild(el('div', 'qh', q)); if (sub) v.appendChild(el('p', 'qs', sub));
+    var g = el('div', 'big2');
+    [[true, yesLabel, 'yes'], [false, noLabel, '']].forEach(function (o) {
+      var b = el('button', 'bb ' + o[2], o[1]); b.type = 'button'; b.setAttribute('aria-pressed', String(curYes === o[0]));
+      b.addEventListener('click', function () { onPick(o[0]); qnext(); }); g.appendChild(b);
+    });
+    v.appendChild(g);
+  }
+  function renderQuick() {
+    var v = $('v-quick'); v.textContent = '';
+    if (qstep >= QSTEPS.length) { renderResult(v); return; }
+    qtop(v);
+    var st = QSTEPS[qstep], ev;
+    if (st === 'seg') {
+      v.appendChild(el('div', 'qh', T('Какая кухня?'))); v.appendChild(el('p', 'qs', T('Листай и нажми на нужную.')));
+      var car = el('div', 'car'), sel = null;
+      SEGS.forEach(function (g) {
+        var P = state.prices[g[0]], pair = num(P.low) + num(P.up);
+        var b = el('button', 'sc'); b.type = 'button'; b.setAttribute('aria-pressed', String(state.seg === g[0]));
+        var sw = el('span', 'sw'); sw.style.background = 'var(--c-' + g[0] + ')'; b.appendChild(sw);
+        var tx = el('span'); tx.appendChild(el('b', '', T(g[1]))); tx.appendChild(el('span', 'pp', pair > 0 ? T('около ') + money(pair) + T(' за метр') : T('цена не задана'))); b.appendChild(tx);
+        b.addEventListener('click', function () { state.seg = g[0]; persist(); qnext(); });
+        if (state.seg === g[0]) sel = b; car.appendChild(b);
+      });
+      v.appendChild(car);
+      setTimeout(function () { if (sel && sel.scrollIntoView && car.scrollTo) car.scrollTo({ left: sel.offsetLeft - (car.clientWidth - sel.clientWidth) / 2, behavior: 'auto' }); }, 0);
+    } else if (st === 'len') {
+      v.appendChild(el('div', 'qh', T('Сколько метров?'))); v.appendChild(el('p', 'qs', T('Нижний ряд. Шаг 0,6 м, как модуль.')));
+      var pic = el('div', 'pic'); pic.style.marginTop = '14px'; v.appendChild(pic);
+      var box = el('div', 'lenbox'), minus = el('button', 'round', '−'), plus = el('button', 'round pri', '+');
+      minus.type = 'button'; plus.type = 'button'; minus.setAttribute('aria-label', T('Минус 0,6 м')); plus.setAttribute('aria-label', T('Плюс 0,6 м'));
+      var lv = el('div', 'lenv'); var lvn = el('span'); lv.appendChild(lvn); lv.appendChild(el('small', '', T('нижний ряд, м')));
+      function upd() { lvn.textContent = str(num(state.run.low)) + T(' м'); drawPic(pic, runs()); Array.prototype.forEach.call(chips.children, function (c) { c.setAttribute('aria-pressed', String(Math.abs(num(state.run.low) - num(c.getAttribute('data-v'))) < 0.001)); }); }
+      function step(d) { state.run.low = str(Math.max(0, Math.round((num(state.run.low) + d) * 10) / 10)); persist(); upd(); }
+      minus.addEventListener('click', function () { step(-0.6); }); plus.addEventListener('click', function () { step(0.6); });
+      box.appendChild(minus); box.appendChild(lv); box.appendChild(plus); v.appendChild(box);
+      var chips = el('div', 'chips');
+      [2.4, 3, 3.6, 4.2, 4.8].forEach(function (x) { var c = el('button', '', str(x) + T(' м')); c.type = 'button'; c.setAttribute('data-v', x); c.addEventListener('click', function () { state.run.low = str(x); persist(); upd(); }); chips.appendChild(c); });
+      v.appendChild(chips);
+      var syncM = manual(v, T('Ввести длину вручную'), [{ label: T('Нижний ряд, м'), get: function () { return state.run.low; }, set: function (x) { state.run.low = x; } }], function () { upd(); });
+      var nx = el('button', 'pri next', T('Дальше')); nx.type = 'button'; nx.disabled = !(num(state.run.low) > 0); nx.addEventListener('click', function () { qnext(); }); v.appendChild(nx);
+      var oldUpd = upd; upd = function () { oldUpd(); nx.disabled = !(num(state.run.low) > 0); syncM(); }; upd();
+    } else if (st === 'up') {
+      yesNo(v, T('Верхние шкафы?'), T('Такой же длины, как низ.'), T('Да'), T('Нет'), state.same, function (yes) { if (yes) state.same = true; else { state.same = false; state.run.up = '0'; } persist(); });
+    } else if (st === 'tall') {
+      v.appendChild(el('div', 'qh', T('Пеналы?'))); v.appendChild(el('p', 'qs', T('Сколько штук по 0,6 м.')));
+      var g4 = el('div', 'big4'), curN = Math.round(num(state.run.tall) / 0.6);
+      [0, 1, 2, 3].forEach(function (n) { var b = el('button', 'bb', n === 0 ? '—' : String(n)); b.type = 'button'; b.setAttribute('aria-label', n === 0 ? T('Без пеналов') : n + T(' шт')); b.setAttribute('aria-pressed', String(curN === n)); b.addEventListener('click', function () { state.run.tall = str(n * 0.6); persist(); qnext(); }); g4.appendChild(b); });
+      v.appendChild(g4);
+    } else if (st === 'top') {
+      var topOn = state.lines.filter(function (l) { return l.id === 'mt_top'; })[0].on;
+      yesNo(v, T('Столешница?'), T('Изделие и монтаж.'), T('Нужна'), T('Не нужна'), topOn, function (yes) { setOn(['top_item', 'mt_top'], yes); persist(); });
+    } else if (st === 'mount') {
+      var mOn = state.lines.filter(function (l) { return l.id === 'mt_low'; })[0].on;
+      yesNo(v, T('Монтаж?'), T('Нижний и верхний ярус, пеналы.'), T('Нужен'), T('Не нужен'), mOn, function (yes) { setOn(['mt_low', 'mt_up', 'mt_tall'], yes); persist(); });
+    }
+  }
+  function titleBlock(withSeg) {
+    var t = el('div', 'tblk'), c1 = el('div'); c1.appendChild(wordmark(26)); t.appendChild(c1);
+    var d = new Date(), c2 = el('div'); c2.appendChild(el('span', 'k', T('Дата'))); c2.appendChild(el('span', 'v', d.toLocaleDateString(LOC[LANG], { day: '2-digit', month: '2-digit', year: '2-digit' }))); t.appendChild(c2);
+    var c3 = el('div'); c3.appendChild(el('span', 'k', withSeg ? T('Сегмент') : T('Лист'))); c3.appendChild(el('span', 'v', withSeg ? T(segLabel(state.seg)) : '1 / 1')); t.appendChild(c3);
+    return t;
+  }
+  function rl(host, label, val, off) { var r = el('div', 'rl'); r.appendChild(el('span', '', label)); r.appendChild(el('span', 'v' + (off ? ' off' : ''), val)); host.appendChild(r); }
+  function renderResult(v) {
+    var t = el('div', 'qtop'); var b = el('button', 'back', '←'); b.type = 'button'; b.setAttribute('aria-label', T('Назад')); b.addEventListener('click', function () { qstep = QSTEPS.length - 1; renderQuick(); }); t.appendChild(b);
+    var d = el('div', 'dots'); QSTEPS.forEach(function () { d.appendChild(el('i', 'on')); }); t.appendChild(d); var cl = el('button', 'close', '×'); cl.type = 'button'; cl.setAttribute('aria-label', T('Закрыть')); cl.addEventListener('click', function () { location.hash = 'home'; }); t.appendChild(cl); v.appendChild(t);
+    var ev = evaluate(), segName = T(SEGS.filter(function (g) { return g[0] === state.seg; })[0][1]);
+    var card = el('div', 'card res');
+    card.appendChild(el('div', 'lbl', T('Кухня ') + qf(ev.r.low) + T(' м · ') + segName));
+    card.appendChild(el('div', 'tt', ev.total > 0 ? money(ev.total) : '—'));
+    card.appendChild(el('div', 'rg', ev.total > 0 && ev.sp > 0 ? T('вилка ') + money(ev.lo) + ' – ' + money(ev.hi) : T('цены не заданы')));
+    var w = el('div', 'rl-wrap');
+    rl(w, T('Кухня'), ev.kitchen > 0 ? money(ev.kitchen) : T('цена не задана'), !(ev.kitchen > 0));
+    var topOn = state.lines.filter(function (l) { return l.id === 'mt_top'; })[0].on, mOn = state.lines.filter(function (l) { return l.id === 'mt_low'; })[0].on;
+    rl(w, T('Столешница'), !topOn ? T('не нужна') : (ev.counter > 0 ? money(ev.counter) : T('цена не задана')), !(topOn && ev.counter > 0));
+    rl(w, T('Монтаж'), !mOn ? T('не нужен') : (ev.mount > 0 ? money(ev.mount) : T('цена не задана')), !(mOn && ev.mount > 0));
+    if (ev.other > 0) rl(w, T('Допы'), money(ev.other));
+    card.appendChild(w); card.appendChild(titleBlock(true)); v.appendChild(card);
+    var rr = el('div', 'rrow');
+    var more = el('button', 'pri', T('Подробнее')); more.type = 'button'; more.addEventListener('click', function () { location.hash = 'kitchen'; });
+    var again = el('button', '', T('Заново')); again.type = 'button'; again.addEventListener('click', function () { curSaved = null; qstep = 0; renderQuick(); });
+    rr.appendChild(more); rr.appendChild(again); v.appendChild(rr);
+    clientBox(v, function () { return { text: function (lg) { return kText(ev, lg); }, kind: 'kitchen', meta: { len: ev.r.low, seg: state.seg }, total: ev.total, summary: T('Кухня ') + qf(ev.r.low) + T(' м · ') + segName, snap: { seg: state.seg, same: state.same, depth: state.depth, run: Object.assign({}, state.run), lines: state.lines.map(function (l) { return { id: l.id, on: l.on, qty: l.qty }; }) } }; });
+  }
+  builders.quick = function () { renderQuick(); };
+
+
+  /* bathroom quick flow */
+  var BSTEPS = ['seg', 'size', 'fix'], bqstep = 0;
+  var BFIX = [['b_wc', 'Унитаз'], ['b_bidet', 'Биде'], ['b_shower', 'Душ'], ['b_tub', 'Ванна'], ['b_sink', 'Раковина']];
+  function bline(id) { return state.bath.lines.filter(function (l) { return l.id === id; })[0]; }
+  function bathQuick() {
+    var a = bathAreas().floor, P = num(state.bprices[state.seg]);
+    var base = a > 0 && P > 0 ? a * P : 0;
+    var extras = state.bath.lines.reduce(function (s, l) { return s + lineCost(l, B); }, 0);
+    var sp = Math.max(0, num(state.spread)) / 100;
+    return { area: a, base: base, extras: extras, total: Math.round(base + extras), lo: Math.round(base * (1 - sp) + extras), hi: Math.round(base * (1 + sp) + extras), sp: sp };
+  }
+  function bqtop(v, total) {
+    var t = el('div', 'qtop');
+    var b = el('button', 'back', bqstep > 0 ? '←' : '×'); b.type = 'button'; b.setAttribute('aria-label', bqstep > 0 ? T('Назад') : T('Закрыть'));
+    b.addEventListener('click', function () { if (bqstep > 0) { bqstep = Math.min(bqstep, BSTEPS.length) - 1; renderBQ(); } else location.hash = 'home'; }); t.appendChild(b);
+    var d = el('div', 'dots'); BSTEPS.forEach(function (s, i) { d.appendChild(el('i', i <= bqstep || total ? 'on' : '')); }); t.appendChild(d);
+    var c = el('button', 'close', '×'); c.type = 'button'; c.setAttribute('aria-label', T('Закрыть')); c.addEventListener('click', function () { location.hash = 'home'; }); if (bqstep === 0) c.style.visibility = 'hidden'; t.appendChild(c);
+    v.appendChild(t);
+  }
+  function drawPlan(host) {
+    host.textContent = ''; var L = num(state.bath.L), W = num(state.bath.W);
+    if (!(L > 0 && W > 0)) { host.appendChild(el('div', 'empty', T('Введи размеры.'))); return; }
+    var pad = 0.25, k = 100, vw = (L + pad * 2) * k, vh = (W + pad * 2) * k;
+    var svg = sv('svg', { viewBox: '0 0 ' + vw + ' ' + vh, role: 'img', 'aria-label': T('План ванной ') + qf(L) + T(' на ') + qf(W) + T(' м') });
+    svg.appendChild(sv('rect', { x: pad * k, y: pad * k, width: L * k, height: W * k, style: 'fill:var(--wall);stroke:var(--ink);stroke-width:3' }));
+    var fs = Math.max(11, Math.min(vw, vh) * 0.09);
+    svg.appendChild(sv('text', { x: vw / 2, y: vh / 2 + fs * 0.35, 'text-anchor': 'middle', style: 'fill:var(--ink);font:600 ' + fs + 'px var(--f-body)' }, qf(L * W) + T(' м²')));
+    svg.appendChild(sv('text', { x: vw / 2, y: pad * k - 5, 'text-anchor': 'middle', style: 'fill:var(--muted);font:500 ' + fs * 0.7 + 'px var(--f-body)' }, qf(L) + T(' м')));
+    svg.appendChild(sv('text', { x: pad * k - 6, y: vh / 2, 'text-anchor': 'middle', transform: 'rotate(-90 ' + (pad * k - 6) + ' ' + vh / 2 + ')', style: 'fill:var(--muted);font:500 ' + fs * 0.7 + 'px var(--f-body)' }, qf(W) + T(' м')));
+    host.appendChild(svg);
+  }
+  function sizeStepper(v, key, label, onChange) {
+    var box = el('div', 'lenbox'), minus = el('button', 'round', '−'), plus = el('button', 'round pri', '+'); minus.type = 'button'; plus.type = 'button';
+    minus.setAttribute('aria-label', label + T(' минус 0,1 м')); plus.setAttribute('aria-label', label + T(' плюс 0,1 м'));
+    var lv = el('div', 'lenv'); lv.style.fontSize = 'calc(34px * var(--ds))'; var n = el('span'); lv.appendChild(n); lv.appendChild(el('small', '', label));
+    function upd() { n.textContent = str(num(state.bath[key])) + T(' м'); }
+    function step(d) { state.bath[key] = str(Math.max(0.5, Math.round((num(state.bath[key]) + d) * 10) / 10)); persist(); upd(); onChange(); }
+    minus.addEventListener('click', function () { step(-0.1); }); plus.addEventListener('click', function () { step(0.1); });
+    box.appendChild(minus); box.appendChild(lv); box.appendChild(plus); v.appendChild(box); upd(); return upd;
+  }
+  function renderBQ() {
+    var v = $('v-bq'); v.textContent = '';
+    if (bqstep >= BSTEPS.length) { renderBQResult(v); return; }
+    bqtop(v, false);
+    var st = BSTEPS[bqstep];
+    if (st === 'seg') {
+      v.appendChild(el('div', 'qh', T('Какая ванная?'))); v.appendChild(el('p', 'qs', T('Листай и нажми на нужную.')));
+      var car = el('div', 'car'), sel = null;
+      SEGS.forEach(function (g) {
+        var P = num(state.bprices[g[0]]);
+        var b = el('button', 'sc'); b.type = 'button'; b.setAttribute('aria-pressed', String(state.seg === g[0]));
+        var sw = el('span', 'sw'); sw.style.background = 'var(--c-' + g[0] + ')'; b.appendChild(sw);
+        var tx = el('span'); tx.appendChild(el('b', '', T(g[1]))); tx.appendChild(el('span', 'pp', P > 0 ? T('около ') + money(P) + T(' за м² пола') : T('цена не задана'))); b.appendChild(tx);
+        b.addEventListener('click', function () { state.seg = g[0]; persist(); bqstep++; renderBQ(); });
+        if (state.seg === g[0]) sel = b; car.appendChild(b);
+      });
+      v.appendChild(car);
+      setTimeout(function () { if (sel && car.scrollTo) car.scrollTo({ left: sel.offsetLeft - (car.clientWidth - sel.clientWidth) / 2, behavior: 'auto' }); }, 0);
+    } else if (st === 'size') {
+      v.appendChild(el('div', 'qh', T('Какой размер?'))); v.appendChild(el('p', 'qs', T('Длина и ширина комнаты, шаг 0,1 м.')));
+      var pic = el('div', 'pic'); pic.style.marginTop = '14px'; v.appendChild(pic); drawPlan(pic);
+      var syncB = function () {}, chg = function () { drawPlan(pic); syncB(); };
+      var uL = sizeStepper(v, 'L', T('длина'), chg), uW = sizeStepper(v, 'W', T('ширина'), chg);
+      syncB = manual(v, T('Ввести размеры вручную'), [{ label: T('Длина, м'), get: function () { return state.bath.L; }, set: function (x) { state.bath.L = x; } }, { label: T('Ширина, м'), get: function () { return state.bath.W; }, set: function (x) { state.bath.W = x; } }], function () { uL(); uW(); drawPlan(pic); });
+      var nx = el('button', 'pri next', T('Дальше')); nx.type = 'button'; nx.style.marginTop = '16px'; nx.addEventListener('click', function () { bqstep++; renderBQ(); }); v.appendChild(nx);
+    } else {
+      v.appendChild(el('div', 'qh', T('Что ставим?'))); v.appendChild(el('p', 'qs', T('Нажимай на нужное, можно несколько.')));
+      var chips = el('div', 'chips'); chips.style.justifyContent = 'flex-start'; chips.style.marginTop = '20px';
+      BFIX.forEach(function (f) {
+        var l = bline(f[0]); var c = el('button', '', T(f[1])); c.type = 'button'; c.style.padding = '14px 20px'; c.style.fontSize = '17px'; c.setAttribute('aria-pressed', String(num(l.qty) > 0));
+        c.addEventListener('click', function () { l.qty = num(l.qty) > 0 ? '' : '1'; var tp = bline('b_tap'); tp.qty = String(['b_bidet', 'b_shower', 'b_tub', 'b_sink'].filter(function (id) { return num(bline(id).qty) > 0; }).length || ''); persist(); renderBQ(); });
+        chips.appendChild(c);
+      });
+      v.appendChild(chips);
+      var go = el('button', 'pri next', T('Показать цену')); go.type = 'button'; go.style.marginTop = '24px'; go.addEventListener('click', function () { bqstep = BSTEPS.length; renderBQ(); }); v.appendChild(go);
+    }
+  }
+  function renderBQResult(v) {
+    bqtop(v, true);
+    var q = bathQuick(), segName = T(SEGS.filter(function (g) { return g[0] === state.seg; })[0][1]);
+    var card = el('div', 'card res');
+    card.appendChild(el('div', 'lbl', T('Ванная ') + qf(num(state.bath.L)) + ' × ' + qf(num(state.bath.W)) + T(' м · ') + segName));
+    card.appendChild(el('div', 'tt', q.total > 0 ? money(q.total) : '—'));
+    card.appendChild(el('div', 'rg', q.total > 0 && q.sp > 0 ? T('вилка ') + money(q.lo) + ' – ' + money(q.hi) : T('цена за м² не задана')));
+    var w = el('div', 'rl-wrap');
+    rl(w, T('Площадь пола'), qf(q.area) + T(' м²'));
+    rl(w, T('Ремонт по м²'), q.base > 0 ? money(q.base) : T('цена не задана'), !(q.base > 0));
+    var fx = BFIX.filter(function (f) { return num(bline(f[0]).qty) > 0; }).map(function (f) { return T(f[1]).toLowerCase(); });
+    rl(w, T('Сантехника'), fx.length ? fx.join(', ') : T('не выбрана'), !fx.length);
+    if (q.extras > 0) rl(w, T('Допы'), money(q.extras));
+    card.appendChild(w); card.appendChild(titleBlock(true)); v.appendChild(card);
+    if (state.borient) v.appendChild(el('p', 'hint', T('Цена за м² это ориентир Habitissimo (200–400 €/м²), не твоя. Свою впиши в «Цены».')));
+    var rr = el('div', 'rrow');
+    var more = el('button', 'pri', T('Подробнее')); more.type = 'button'; more.addEventListener('click', function () { location.hash = 'bath'; });
+    var again = el('button', '', T('Заново')); again.type = 'button'; again.addEventListener('click', function () { curSaved = null; bqstep = 0; renderBQ(); });
+    rr.appendChild(more); rr.appendChild(again); v.appendChild(rr);
+    clientBox(v, function () { return { text: function (lg) { return bText(q, lg); }, kind: 'bath', meta: { L: num(state.bath.L), W: num(state.bath.W), seg: state.seg }, total: q.total, summary: T('Ванная ') + qf(num(state.bath.L)) + ' × ' + qf(num(state.bath.W)) + T(' м · ') + segName, snap: { seg: state.seg, L: state.bath.L, W: state.bath.W, H: state.bath.H, open: state.bath.open, lines: state.bath.lines.map(function (l) { return { id: l.id, on: l.on, qty: l.qty }; }) } }; });
+  }
+
+
+  /* mounting quick flow */
+  var mqstep = 0;
+  function mItems() { return state.lines.filter(function (l) { return !l.nomount; }); }
+  function mSel() { return mItems().filter(function (l) { return state.msel[l.id]; }); }
+  function mStepInfo(l) { if (l.unit === 'м.п.') return { st: 0.6, chips: [2.4, 3, 3.6, 4.2, 4.8], d: 1 }; if (l.unit === 'м²') return { st: 0.5, chips: [1, 2, 3, 4, 5], d: 1 }; if (l.unit === 'шт') return { st: 1, chips: [1, 2, 3, 4], d: 0 }; return { st: 1, chips: [1], d: 0 }; }
+  function mqtop(v, n, total) {
+    var t = el('div', 'qtop');
+    var b = el('button', 'back', mqstep > 0 ? '←' : '×'); b.type = 'button'; b.setAttribute('aria-label', mqstep > 0 ? T('Назад') : T('Закрыть'));
+    b.addEventListener('click', function () { if (mqstep > 0) { mqstep = Math.min(mqstep, n - 1) - 1; renderMQ(); } else location.hash = 'home'; }); t.appendChild(b);
+    var d = el('div', 'dots'); for (var i = 0; i < n; i++) d.appendChild(el('i', i <= mqstep || total ? 'on' : '')); t.appendChild(d);
+    var c = el('button', 'close', '×'); c.type = 'button'; c.setAttribute('aria-label', T('Закрыть')); c.addEventListener('click', function () { location.hash = 'home'; }); if (mqstep === 0) c.style.visibility = 'hidden'; t.appendChild(c);
+    v.appendChild(t);
+  }
+  function renderMQ() {
+    var v = $('v-mq'); v.textContent = ''; var sel = mSel(), n = 1 + sel.length + 1;
+    if (mqstep > 0 && !sel.length) mqstep = 0;
+    if (mqstep === 0) {
+      mqtop(v, Math.max(n, 3), false);
+      v.appendChild(el('div', 'qh', T('Что монтируем?'))); v.appendChild(el('p', 'qs', T('Нажимай на нужное, можно несколько.')));
+      var chips = el('div', 'chips'); chips.style.justifyContent = 'flex-start'; chips.style.marginTop = '20px';
+      var nx = el('button', 'pri next', T('Дальше')); nx.type = 'button'; nx.style.marginTop = '24px';
+      mItems().forEach(function (l) {
+        var c = el('button', '', dn(l) || T('Без названия')); c.type = 'button'; c.style.padding = '12px 16px'; c.style.textAlign = 'left'; c.style.fontSize = '15px'; c.setAttribute('aria-pressed', String(!!state.msel[l.id]));
+        c.addEventListener('click', function () { state.msel[l.id] = !state.msel[l.id]; persist(); renderMQ(); }); chips.appendChild(c);
+      });
+      v.appendChild(chips); nx.disabled = !sel.length; nx.addEventListener('click', function () { mqstep = 1; renderMQ(); }); v.appendChild(nx);
+      return;
+    }
+    if (mqstep > sel.length) { renderMQResult(v, sel, n); return; }
+    var l = sel[mqstep - 1], info = mStepInfo(l);
+    mqtop(v, n, false);
+    v.appendChild(el('div', 'qh', dn(l) || T('Позиция'))); v.appendChild(el('p', 'qs', T('Сколько, ') + T(l.unit) + (num(l.price) > 0 ? ' · ' + money(num(l.price)) + T(' за ') + T(l.unit) : T(' · цена не задана'))));
+    var box = el('div', 'lenbox'), minus = el('button', 'round', '−'), plus = el('button', 'round pri', '+'); minus.type = 'button'; plus.type = 'button';
+    minus.setAttribute('aria-label', T('Меньше')); plus.setAttribute('aria-label', T('Больше'));
+    var lv = el('div', 'lenv'); var lvn = el('span'); lv.appendChild(lvn); lv.appendChild(el('small', '', T(l.unit)));
+    var cw = el('div', 'chips'), nx2 = el('button', 'pri next', T('Дальше')); nx2.type = 'button';
+    function upd() { var q = num(state.mq[l.id]); lvn.textContent = str(q); nx2.disabled = !(q > 0); Array.prototype.forEach.call(cw.children, function (c) { c.setAttribute('aria-pressed', String(Math.abs(q - num(c.getAttribute('data-v'))) < 0.001)); }); }
+    function step(d) { state.mq[l.id] = str(Math.max(0, Math.round((num(state.mq[l.id]) + d) * 10) / 10)); persist(); upd(); }
+    minus.addEventListener('click', function () { step(-info.st); }); plus.addEventListener('click', function () { step(info.st); });
+    box.appendChild(minus); box.appendChild(lv); box.appendChild(plus); v.appendChild(box);
+    info.chips.forEach(function (x) { var c = el('button', '', str(x)); c.type = 'button'; c.setAttribute('data-v', x); c.addEventListener('click', function () { state.mq[l.id] = str(x); persist(); upd(); }); cw.appendChild(c); });
+    cw.style.marginTop = '18px'; v.appendChild(cw);
+    var syncQ = manual(v, T('Ввести вручную'), [{ label: T('Количество, ') + T(l.unit), get: function () { return state.mq[l.id] || ''; }, set: function (x) { state.mq[l.id] = x; } }], function () { upd(); });
+    var upd0 = upd; upd = function () { upd0(); syncQ(); };
+    nx2.addEventListener('click', function () { mqstep++; renderMQ(); }); v.appendChild(nx2); upd();
+  }
+  function renderMQResult(v, sel, n) {
+    mqtop(v, n, true);
+    var total = 0, miss = [], card = el('div', 'card res'), w = el('div', 'rl-wrap');
+    sel.forEach(function (l) { var q = num(state.mq[l.id]), p = num(l.price), c = q > 0 && p > 0 ? q * p : 0; total += c; if (q > 0 && !(p > 0)) miss.push(dn(l)); rl(w, dn(l), c > 0 ? money(c) : T('цена не задана'), !(c > 0)); });
+    card.appendChild(el('div', 'lbl', T('Монтаж')));
+    card.appendChild(el('div', 'tt', total > 0 ? money(total) : '—'));
+    card.appendChild(el('div', 'rg', total > 0 ? sel.length + ' ' + (sel.length === 1 ? T('позиция') : sel.length < 5 ? T('позиции') : T('позиций')) : T('цены не заданы')));
+    card.appendChild(w); card.appendChild(titleBlock(false)); v.appendChild(card);
+    if (miss.length) v.appendChild(el('div', 'warn', T('Нет цены: ') + miss.join(', ') + T('. Впиши в «Подробнее».')));
+    var rr = el('div', 'rrow');
+    var more = el('button', 'pri', T('Подробнее')); more.type = 'button'; more.addEventListener('click', function () { location.hash = 'mount'; });
+    var again = el('button', '', T('Заново')); again.type = 'button'; again.addEventListener('click', function () { curSaved = null; mqstep = 0; renderMQ(); });
+    rr.appendChild(more); rr.appendChild(again); v.appendChild(rr);
+    clientBox(v, function () { var sn = {}, mq = {}; sel.forEach(function (l) { sn[l.id] = true; mq[l.id] = state.mq[l.id]; }); return { text: function (lg) { return mText(sel, lg); }, kind: 'mount', meta: { n: sel.length }, total: total, summary: T('Монтаж · ') + sel.length + T(' поз.'), snap: { msel: sn, mq: mq } }; });
+  }
+
+
+  /* first-run setup */
+  var setupStep = 0, SETUP_N = 5;
+  var SETUP_LINES = ['mt_low', 'mt_up', 'mt_tall', 'mt_top', 'led', 'app', 'boiler', 'wash'];
+  function finishSetup() { state.ob = true; state.langSet = true; persist(); location.hash = 'home'; }
+  function priceInput(get, set, label) {
+    var i = el('input'); i.type = 'text'; i.inputMode = 'decimal'; i.autocomplete = 'off'; i.placeholder = '0'; i.value = get(); i.setAttribute('aria-label', label);
+    i.addEventListener('input', function () { set(i.value); persist(); }); return i;
+  }
+  function renderSetup() {
+    var v = $('v-setup'); v.textContent = '';
+    var t = el('div', 'qtop'), b = el('button', 'back', setupStep > 0 ? '←' : '×'); b.type = 'button'; b.setAttribute('aria-label', setupStep > 0 ? T('Назад') : T('Пропустить'));
+    b.addEventListener('click', function () { if (setupStep > 0) { setupStep--; renderSetup(); } else finishSetup(); }); t.appendChild(b);
+    var d = el('div', 'dots'); for (var i = 0; i < SETUP_N; i++) d.appendChild(el('i', i <= setupStep ? 'on' : '')); t.appendChild(d);
+    var sk = el('button', 'link', T('Пропустить')); sk.type = 'button'; sk.addEventListener('click', finishSetup); if (setupStep === SETUP_N - 1) sk.style.visibility = 'hidden'; t.appendChild(sk); v.appendChild(t);
+    function nxt(label, fn) { var n = el('button', 'pri next', label); n.type = 'button'; n.style.marginTop = '20px'; n.addEventListener('click', fn || function () { setupStep++; renderSetup(); }); v.appendChild(n); }
+    if (setupStep === 0) {
+      var lg = el('div'); lg.style.cssText = 'display:flex;justify-content:center;margin:10px 0 6px'; lg.innerHTML = logoSvg(120); v.appendChild(lg);
+      v.appendChild(el('div', 'qh', T('Сначала твои цены'))); v.appendChild(el('p', 'qs', T('Впиши свои цены или пропусти. Пока стоят ориентиры, их можно поменять позже.')));
+      var lh = el('div'); lh.style.marginTop = '22px'; lh.appendChild(el('div', 'lab', T('Язык'))); lh.appendChild(langSwitch()); v.appendChild(lh);
+      nxt(T('Начать'));
+    } else if (setupStep === 1) {
+      v.appendChild(el('div', 'qh', T('Цены кухни'))); v.appendChild(el('p', 'qs', T('Сколько ты берёшь за метр каждого яруса. Пока стоят ориентиры.')));
+      var c = el('div', 'card sec'); c.style.marginTop = '16px'; var pt = el('div', 'pt'); pt.appendChild(el('span', 'h', ''));
+      SEGS.forEach(function (g) { pt.appendChild(el('span', 'h', T(g[1]))); });
+      [['low', 'Низ'], ['up', 'Верх'], ['tall', 'Пенал']].forEach(function (tr) {
+        pt.appendChild(el('span', '', T(tr[1])));
+        SEGS.forEach(function (g) { pt.appendChild(priceInput(function () { return state.prices[g[0]][tr[0]]; }, function (x) { state.prices[g[0]][tr[0]] = x; state.orient = false; }, T(g[1]) + ', ' + T(tr[1]) + ', ' + T(', € за м.п.').replace(/^, /, ''))); });
+      });
+      c.appendChild(pt); v.appendChild(c); v.appendChild(el('p', 'hint', T('Цена за метр одного яруса. Пенал считается отдельно.')));
+      var top = state.lines.filter(function (l) { return l.id === 'top_item'; })[0];
+      var tw = el('div', 'card sec'); tw.appendChild(el('div', 'lab', T('Столешница, € за м.п.'))); tw.appendChild(priceInput(function () { return top.price; }, function (x) { top.price = x; }, T('Столешница, € за м.п.'))); v.appendChild(tw);
+      nxt(T('Дальше'));
+    } else if (setupStep === 2) {
+      v.appendChild(el('div', 'qh', T('Ставки монтажа'))); v.appendChild(el('p', 'qs', T('Твои ставки в € за единицу. Остальное можно вписать в «Подробнее».')));
+      var mc = el('div', 'card'); mc.style.marginTop = '16px';
+      SETUP_LINES.forEach(function (id) {
+        var l = state.lines.filter(function (x) { return x.id === id; })[0]; if (!l) return;
+        var row = el('div', 'ln'); row.style.cssText = 'display:grid;grid-template-columns:minmax(0,1fr) 96px;gap:10px;align-items:center';
+        var nm = el('div'); nm.appendChild(el('div', '', dn(l))); var u = el('div', 'hint', '€ / ' + T(l.unit)); u.style.margin = '0'; nm.appendChild(u);
+        row.appendChild(nm); row.appendChild(priceInput(function () { return l.price; }, function (x) { l.price = x; }, T('Цена: ') + dn(l))); mc.appendChild(row);
+      });
+      v.appendChild(mc); nxt(T('Дальше'));
+    } else if (setupStep === 3) {
+      v.appendChild(el('div', 'qh', T('Цены ванной'))); v.appendChild(el('p', 'qs', T('€ за м² пола, работы с материалами.')));
+      var bc = el('div', 'card sec'); bc.style.marginTop = '16px'; var bp = el('div', 'pt'); bp.style.gridTemplateColumns = 'repeat(3, minmax(0, 1fr))';
+      SEGS.forEach(function (g) { bp.appendChild(el('span', 'h', T(g[1]))); });
+      SEGS.forEach(function (g) { bp.appendChild(priceInput(function () { return state.bprices[g[0]]; }, function (x) { state.bprices[g[0]] = x; state.borient = false; }, T('Ванная, ') + T(g[1]) + T(', € за м² пола'))); });
+      bc.appendChild(bp); v.appendChild(bc); nxt(T('Дальше'));
+    } else {
+      v.appendChild(el('div', 'qh', T('Всё готово'))); v.appendChild(el('p', 'qs', T('Цены сохранены. Менять их можно в любой момент во вкладке «Цены».')));
+      nxt(T('Открыть приложение'), finishSetup);
+    }
+  }
+
+  /* kitchen detail */
+  builders.kitchen = function () {
+    var v = $('v-kitchen'); v.textContent = ''; header(v, T('Кухня'));
+    var bar = el('div', 'bar'); var tot = el('div', 'tot'); tot.appendChild(el('span', 'k', T('Итого'))); kUi.tv = el('span', 'v', '—'); kUi.tr = el('span', 'r'); tot.appendChild(kUi.tv); tot.appendChild(kUi.tr); bar.appendChild(tot);
+    kUi.seg = el('div', 'seg'); kUi.seg.setAttribute('role', 'group'); kUi.seg.setAttribute('aria-label', T('Сегмент')); bar.appendChild(kUi.seg); v.appendChild(bar);
+    var s1 = el('div', 'sec'); s1.appendChild(el('h2', '', T('Размер'))); kUi.pic = el('div', 'pic'); s1.appendChild(kUi.pic);
+    var runsH = el('div'); kUi.rows = {};
+    [['low', T('Нижний ряд')], ['up', T('Верхний ряд')], ['tall', T('Пеналы')]].forEach(function (p) { runsH.appendChild(stepperRow(p[0], p[1])); });
+    s1.appendChild(runsH);
+    var sl = el('label', 'same'); sl.setAttribute('for', 'same'); var sc = el('input'); sc.type = 'checkbox'; sc.id = 'same'; sc.checked = !!state.same; sc.addEventListener('change', function () { state.same = sc.checked; touch(); }); sl.appendChild(sc); sl.appendChild(document.createTextNode(T('Верх такой же, как низ'))); s1.appendChild(sl);
+    v.appendChild(s1);
+    var s2 = el('div', 'sec'); s2.appendChild(el('h2', '', T('Монтаж и допы'))); kUi.lines = el('div'); s2.appendChild(kUi.lines);
+    var add = el('button', '', T('+ Позиция')); add.type = 'button'; add.style.alignSelf = 'flex-start'; add.addEventListener('click', function () { addCustom(state.lines, K, kUi.lines, kRefs); }); s2.appendChild(add); v.appendChild(s2);
+    buildList(kUi.lines, state.lines, K, kRefs);
+    var s3 = el('div', 'sec'); s3.appendChild(el('h2', '', T('Итог'))); kUi.tl = el('div', 'tl'); kUi.tref = {};
+    [['', T('Кухня'), 'k'], ['', T('Монтаж и допы'), 'i'], ['big', T('Итого'), 't'], ['', T('Вилка'), 'r'], ['', T('Кухня за метр нижнего ряда'), 'pm']].forEach(function (a) { var d = el('div', 'line ' + a[0]); d.appendChild(el('span', '', a[1])); var x = el('span', 'val'); d.appendChild(x); kUi.tl.appendChild(d); kUi.tref[a[2]] = x; });
+    s3.appendChild(kUi.tl); kUi.tw = el('div'); s3.appendChild(kUi.tw); v.appendChild(s3);
+    kUi.fixedSeg = function () {
+      kUi.seg.textContent = '';
+      SEGS.forEach(function (g) { var b = el('button', '', T(g[1])); b.type = 'button'; b.setAttribute('aria-pressed', String(state.seg === g[0])); b.addEventListener('click', function () { state.seg = g[0]; kUi.fixedSeg(); touch(); }); kUi.seg.appendChild(b); });
+    };
+    kUi.fixedSeg();
+  };
+  function stepperRow(key, label) {
+    var row = el('div', 'row'); row.appendChild(el('span', 'nm', label));
+    var sub = el('span', 'sub'); row.appendChild(sub);
+    var stp = el('div', 'stp'), minus = el('button', '', '−'), inp = el('input'), plus = el('button', '', '+');
+    minus.type = 'button'; plus.type = 'button'; minus.setAttribute('aria-label', label + T(': минус 0,6 м')); plus.setAttribute('aria-label', label + T(': плюс 0,6 м'));
+    inp.type = 'text'; inp.inputMode = 'decimal'; inp.autocomplete = 'off'; inp.setAttribute('aria-label', label + T(', м.п.')); inp.value = state.run[key];
+    function step(d) { var x = Math.max(0, num(state.run[key]) + d); state.run[key] = str(x); inp.value = state.run[key]; touch(); }
+    minus.addEventListener('click', function () { step(-0.6); }); plus.addEventListener('click', function () { step(0.6); });
+    inp.addEventListener('input', function () { state.run[key] = inp.value; touch(); });
+    stp.appendChild(minus); stp.appendChild(inp); stp.appendChild(plus); row.appendChild(stp);
+    kUi.rows[key] = { sub: sub, inp: inp, minus: minus, plus: plus };
+    return row;
+  }
+  refreshers.kitchen = function () {
+    var ev = evaluate(), r = ev.r;
+    kUi.tv.textContent = ev.total > 0 ? money(ev.total) : '—'; kUi.tr.textContent = ev.total > 0 && ev.sp > 0 ? money(ev.lo) + ' – ' + money(ev.hi) : ' ';
+    var same = state.same, u = kUi.rows.up; u.inp.disabled = same; u.minus.disabled = same; u.plus.disabled = same; if (same) u.inp.value = state.run.low;
+    ['low', 'up', 'tall'].forEach(function (k, i) { var p = ev.parts[i]; kUi.rows[k].sub.textContent = p[2] > 0 ? (p[1] > 0 ? qf(p[1]) + T(' м.п. × ') + money(p[2]) + ' = ' + money(p[1] * p[2]) : money(p[2]) + T(' за м.п.')) : T('цена не задана'); });
+    drawPic(kUi.pic, r);
+    refreshList(state.lines, K, kRefs);
+    kUi.tref.k.textContent = money(ev.kitchen); kUi.tref.i.textContent = money(ev.install); kUi.tref.t.textContent = money(ev.total);
+    kUi.tref.r.textContent = ev.total > 0 ? money(ev.lo) + ' – ' + money(ev.hi) : '—'; kUi.tref.pm.textContent = (r.low > 0 && ev.kitchen > 0) ? money(ev.kitchen / r.low) : '—';
+    kUi.tw.textContent = '';
+    var miss = ev.parts.filter(function (p) { return p[1] > 0 && !(p[2] > 0); }).map(function (p) { return p[0].toLowerCase(); });
+    if (miss.length) kUi.tw.appendChild(el('div', 'warn', T('Нет цены изготовления: ') + miss.join(', ') + T('. Впиши в разделе «Цены».')));
+  };
+
+  /* mounting only */
+  var mUi = {};
+  builders.mount = function () {
+    var v = $('v-mount'); v.textContent = ''; header(v, T('Монтаж'));
+    var c = el('div', 'card'); c.appendChild(el('div', 'lab', T('Итого'))); mUi.tot = el('div', 'tt'); mUi.tot.style.cssText = 'font:700 34px var(--f-display)'; c.appendChild(mUi.tot); v.appendChild(c);
+    var s = el('div', 'sec'); mUi.host = el('div'); s.appendChild(mUi.host);
+    var p = el('p', 'hint', T('Впиши количество у нужных позиций. Цены общие с кухней.')); s.appendChild(p); v.appendChild(s);
+    mUi.lines = state.lines.filter(function (l) { return !l.nomount; });
+    buildList(mUi.host, mUi.lines, M, mRefs);
+  };
+  refreshers.mount = function () { var s = refreshList(mUi.lines, M, mRefs); mUi.tot.textContent = s > 0 ? money(s) : '—'; };
+
+  /* bathroom */
+  var bUi = {};
+  builders.bath = function () {
+    var v = $('v-bath'); v.textContent = ''; header(v, T('Ванная'));
+    var c = el('div', 'card'); c.appendChild(el('div', 'lab', T('Итого'))); bUi.tot = el('div'); bUi.tot.style.cssText = 'font:700 34px var(--f-display)'; c.appendChild(bUi.tot); v.appendChild(c);
+    var s = el('div', 'sec'); s.appendChild(el('h2', '', T('Размер')));
+    var f = el('div', 'fields3');
+    [['L', T('Длина, м')], ['W', T('Ширина, м')], ['H', T('Высота, м')]].forEach(function (a) {
+      var w = el('div'), id = 'bf' + a[0]; var lb = el('label', '', a[1]); lb.setAttribute('for', id); var i = el('input'); i.type = 'text'; i.id = id; i.inputMode = 'decimal'; i.autocomplete = 'off'; i.value = state.bath[a[0]];
+      i.addEventListener('input', function () { state.bath[a[0]] = i.value; touch(); }); w.appendChild(lb); w.appendChild(i); f.appendChild(w);
+    });
+    s.appendChild(f);
+    var w2 = el('div'); w2.style.marginTop = '2px'; var lb2 = el('label', '', T('Минус дверь и окно, м²')); lb2.setAttribute('for', 'bfo'); var i2 = el('input'); i2.type = 'text'; i2.id = 'bfo'; i2.inputMode = 'decimal'; i2.autocomplete = 'off'; i2.value = state.bath.open; i2.placeholder = '0';
+    i2.addEventListener('input', function () { state.bath.open = i2.value; touch(); }); w2.appendChild(lb2); w2.appendChild(i2); s.appendChild(w2);
+    bUi.areas = el('p', 'hint'); s.appendChild(bUi.areas); v.appendChild(s);
+    var s2 = el('div', 'sec'); s2.appendChild(el('h2', '', T('Позиции'))); bUi.host = el('div'); s2.appendChild(bUi.host);
+    var add = el('button', '', T('+ Позиция')); add.type = 'button'; add.style.alignSelf = 'flex-start'; add.addEventListener('click', function () { addCustom(state.bath.lines, B, bUi.host, bRefs); }); s2.appendChild(add);
+    s2.appendChild(el('p', 'hint', T('Все цены пустые. Впиши свои, работы допиши строкой «Работы».'))); v.appendChild(s2);
+    buildList(bUi.host, state.bath.lines, B, bRefs);
+  };
+  refreshers.bath = function () {
+    var a = bathAreas(); bUi.areas.textContent = T('Пол ') + qf(a.floor) + T(' м², стены ') + qf(a.wall) + T(' м², потолок ') + qf(a.ceil) + T(' м².');
+    var s = refreshList(state.bath.lines, B, bRefs), q = bathQuick(); bUi.tot.textContent = q.total > 0 ? money(q.total) : '—'; bUi.areas.textContent += q.base > 0 ? T(' Ремонт по м²: ') + money(q.base) + T(', допы: ') + money(s) + '.' : '';
+  };
+
+  /* prices */
+  var pUi = {};
+  builders.prices = function () {
+    var v = $('v-prices'); v.textContent = ''; header(v, T('Цены')); var lh = el('div', 'ctl'); var l1 = el('div'); l1.appendChild(el('div', 'lab', T('Вид приложения'))); l1.appendChild(lookSwitch()); var l2 = el('div'); l2.appendChild(el('div', 'lab', T('Язык'))); l2.appendChild(langSwitch()); lh.appendChild(l1); lh.appendChild(l2); v.appendChild(lh);
+    var s = el('div', 'card sec'); var h = el('h2', '', T('Изготовление кухни, € за м.п.')); var chip = el('span', 'chip', T('ориентир')); chip.id = 'chip'; chip.hidden = !state.orient; h.appendChild(chip); s.appendChild(h);
+    var pt = el('div', 'pt'); pt.appendChild(el('span', 'h', '')); SEGS.forEach(function (g) { pt.appendChild(el('span', 'h', T(g[1]))); });
+    [['low', T('Низ')], ['up', T('Верх')], ['tall', T('Пенал')]].forEach(function (t) {
+      pt.appendChild(el('span', '', t[1]));
+      SEGS.forEach(function (g) { var i = el('input'); i.type = 'text'; i.inputMode = 'decimal'; i.autocomplete = 'off'; i.placeholder = '0'; i.value = state.prices[g[0]][t[0]]; i.setAttribute('aria-label', T(g[1]) + ', ' + t[1] + T(', € за м.п.')); i.addEventListener('input', function () { state.prices[g[0]][t[0]] = i.value; state.orient = false; chip.hidden = true; touch(); }); pt.appendChild(i); });
+    });
+    s.appendChild(pt); s.appendChild(el('p', 'hint', T('Цена за метр одного яруса. Пенал считается отдельно.')));
+    var w = el('div'); var lb = el('label', '', T('Вилка ±, %')); lb.setAttribute('for', 'spread'); var sp = el('input'); sp.type = 'text'; sp.id = 'spread'; sp.inputMode = 'decimal'; sp.autocomplete = 'off'; sp.value = state.spread; sp.addEventListener('input', function () { state.spread = sp.value; touch(); }); w.appendChild(lb); w.appendChild(sp); s.appendChild(w);
+    v.appendChild(s);
+    var bs = el('div', 'card sec'); var bh = el('h2', '', T('Ванная, € за м² пола')); var bchip = el('span', 'chip', T('ориентир')); bchip.hidden = !state.borient; bh.appendChild(bchip); bs.appendChild(bh);
+    var bpt = el('div', 'pt'); bpt.style.gridTemplateColumns = 'repeat(3, minmax(0, 1fr))'; SEGS.forEach(function (g) { bpt.appendChild(el('span', 'h', T(g[1]))); });
+    SEGS.forEach(function (g) { var i = el('input'); i.type = 'text'; i.inputMode = 'decimal'; i.autocomplete = 'off'; i.placeholder = '0'; i.value = state.bprices[g[0]]; i.setAttribute('aria-label', T('Ванная, ') + T(g[1]) + T(', € за м² пола')); i.addEventListener('input', function () { state.bprices[g[0]] = i.value; state.borient = false; bchip.hidden = true; persist(); }); bpt.appendChild(i); });
+    bs.appendChild(bpt); bs.appendChild(el('p', 'hint', T('Цена за м² пола, работы с материалами. Позиции в «Ванная → Подробнее» добавляются сверху.'))); v.appendChild(bs);
+    var src = el('div', 'card'); src.appendChild(el('h2', '', T('Откуда ориентиры')));
+    var p1 = el('p', 'hint'); p1.innerHTML = T('Habitissimo, обновлено 10.06.2026, оценки по заявкам пользователей: прямая кухня 3,7 м около 3 000 € (≈810 €/м), 8 м термоламинат около 6 000 € (≈750 €/м), 10 м меламин около 6 000 € (≈600 €/м), 4 м МДФ лак 5 000 € (≈1 250 €/м). Состав цены на странице не указан. <a href="https://www.habitissimo.pt/orcamentos/fazer-cozinha-por-medida" target="_blank" rel="noopener">Источник</a>.'); src.appendChild(p1);
+    var pb = el('p', 'hint'); pb.innerHTML = T('Ванная: Habitissimo, обновлено 10.06.2026, 200–400 €/м² (средняя 300). По Лиссабону вся работа 700–2 500 €. Что входит в цену, на странице не сказано. <a href="https://www.habitissimo.pt/orcamentos/remodelar-casa-de-banho" target="_blank" rel="noopener">Источник</a>.'); src.appendChild(pb);
+    src.appendChild(el('p', 'hint', T('В базе стоят ориентиры на два яруса: 600, 800 и 1 250 € за метр, разделённые пополам между низом и верхом. Пенал равен сумме двух ярусов.')));
+    var p3 = el('p', 'hint'); p3.innerHTML = T('Для сравнения монтаж по Zaask: 39–69 €/мл для кухонь IKEA, год на странице не указан. <a href="https://www.zaask.pt/quanto-custa/instalar-cozinhas-ikea" target="_blank" rel="noopener">Источник</a>.'); src.appendChild(p3);
+    v.appendChild(src);
+    var pc = el('div', 'card sec'); pc.appendChild(el('h2', '', T('Сверка с моими кухнями')));
+    pc.appendChild(el('p', 'hint', T('Длина нижнего ряда и цена без монтажа. Покажу цену за метр и сравню с расчётом.')));
+    pUi.past = el('div'); pc.appendChild(pUi.past); var ap = el('button', '', T('+ Кухня')); ap.type = 'button'; ap.style.alignSelf = 'flex-start'; ap.addEventListener('click', function () { state.past.push({ name: '', len: '', price: '' }); buildPast(); touch(); }); pc.appendChild(ap);
+    pUi.res = el('p', 'hint'); pc.appendChild(pUi.res); v.appendChild(pc); buildPast();
+    var dm = el('div', 'card sec'); dm.appendChild(el('h2', '', T('Режим съёмки'))); dm.appendChild(el('p', 'hint', T('Чистое приложение с первого экрана. Твои данные не трогаются: после обновления страницы они вернутся.')));
+    var dmb = el('button', '', T('Режим съёмки')); dmb.type = 'button'; dmb.style.alignSelf = 'flex-start'; dmb.addEventListener('click', startDemo); dm.appendChild(dmb); v.appendChild(dm);
+  };
+  function startDemo() {
+    DEMO = true; clearTimeout(timer); dirty = false; state = defaults(); LANG = state.lang; document.documentElement.lang = LANG; built = {}; kRefs = {}; mRefs = {}; bRefs = {}; pUi = {}; qstep = 0; bqstep = 0; mqstep = 0; setupStep = 0;
+    buildTabs(); applyLook(); if (location.hash.slice(1) === 'setup') show('setup'); else location.hash = 'setup';
+  }
+  function buildPast() {
+    var h = pUi.past; h.textContent = ''; pUi.pm = [];
+    state.past.forEach(function (p, i) {
+      var row = el('div', 'past');
+      var n = el('input'); n.type = 'text'; n.placeholder = T('Название'); n.value = p.name; n.autocomplete = 'off'; n.setAttribute('aria-label', T('Название кухни')); n.addEventListener('input', function () { p.name = n.value; persist(); });
+      var l = el('input'); l.type = 'text'; l.inputMode = 'decimal'; l.placeholder = T('м.п.'); l.value = p.len; l.autocomplete = 'off'; l.setAttribute('aria-label', T('Длина нижнего ряда, м')); l.addEventListener('input', function () { p.len = l.value; touch(); });
+      var c = el('input'); c.type = 'text'; c.inputMode = 'decimal'; c.placeholder = '€'; c.value = p.price; c.autocomplete = 'off'; c.setAttribute('aria-label', T('Цена без монтажа')); c.addEventListener('input', function () { p.price = c.value; touch(); });
+      var pm = el('span', 'pm'); var d = el('button', 'icon', '×'); d.type = 'button'; d.setAttribute('aria-label', T('Удалить кухню')); d.addEventListener('click', function () { state.past.splice(i, 1); buildPast(); touch(); });
+      row.appendChild(n); row.appendChild(l); row.appendChild(c); row.appendChild(pm); row.appendChild(d); h.appendChild(row); pUi.pm.push(pm);
+    });
+  }
+  refreshers.prices = function () {
+    var ev = evaluate(), vals = [];
+    state.past.forEach(function (p, i) { var len = num(p.len), pr = num(p.price), v = (len > 0 && pr > 0) ? pr / len : 0; if (pUi.pm[i]) pUi.pm[i].textContent = v > 0 ? money(v) + T('/м') : '—'; if (v > 0) vals.push(v); });
+    if (vals.length) { var avg = vals.reduce(function (a, b) { return a + b; }, 0) / vals.length, calc = ev.r.low > 0 && ev.kitchen > 0 ? ev.kitchen / ev.r.low : 0; var df = calc > 0 ? Math.round((calc / avg - 1) * 100) : 0; pUi.res.textContent = T('Среднее по твоим: ') + money(avg) + T(' за метр нижнего ряда.') + (calc > 0 ? T(' Расчёт: ') + money(calc) + T(', разница ') + (df > 0 ? '+' : '') + df + ' %.' : ''); }
+    else pUi.res.textContent = '';
+  };
+
+  /* ---------- router ---------- */
+  function show(name) {
+    if (ROUTES.indexOf(name) < 0) name = 'home';
+    cur = name;
+    ROUTES.forEach(function (r) { $('v-' + r).hidden = r !== name; });
+    if (name === 'quick') { built.quick = true; renderQuick(); }
+    else if (name === 'bq') { built.bq = true; renderBQ(); }
+    else if (name === 'setup') { built.setup = true; renderSetup(); }
+    else if (name === 'mq') { built.mq = true; renderMQ(); }
+    else if (!built[name]) { builders[name](); built[name] = true; }
+    if (refreshers[name]) refreshers[name]();
+    if (name === 'home') { curSaved = null; renderSaved(); }
+    markTabs(); var fl = (name === 'quick' || name === 'bq' || name === 'mq' || name === 'setup'); $('tabs').hidden = fl; document.body.style.paddingBottom = fl ? '32px' : ''; window.scrollTo(0, 0);
+  }
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (g) { document.addEventListener(g, function (e) { e.preventDefault(); }, { passive: false }); });
+  document.addEventListener('touchmove', function (e) { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
+  window.addEventListener('hashchange', function () { show(location.hash.slice(1)); });
+  buildTabs();
+  document.documentElement.lang = LANG; if (!state.ob && !location.hash) location.hash = 'setup'; show(location.hash.slice(1)); applyLook();
+
+  (window.claude && window.claude.use ? window.claude.use('db') : Promise.resolve(null)).then(function (d) {
+    if (!d) return;
+    d.doc('quick/state').get().then(function (snap) {
+      if (DEMO) { db = null; return; }
+      if (snap.exists) { state = normalize(JSON.parse(JSON.stringify(snap.data()))); try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} LANG = state.lang; document.documentElement.lang = LANG === 'uk' ? 'uk' : LANG; built = {}; kRefs = {}; mRefs = {}; bRefs = {}; buildTabs(); if (state.ob && cur === 'setup') location.hash = 'home'; else if (!state.ob && cur === 'home' && !location.hash.slice(1)) location.hash = 'setup'; else show(cur); applyLook(); }
+      db = d; if (!snap.exists) persist();
+    }, function () { db = null; setStatus(T('Сервер недоступен. Данные сохраняются только в этом браузере.')); });
+  }, function () { db = null; });
+})();
+</script>
+</body>
+</html>
