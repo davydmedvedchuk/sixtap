@@ -4,7 +4,7 @@
 
 Pick the tier, set the length, get a price with a range. A message with the number goes to the client on WhatsApp while you're still standing in the kitchen. Free, no account.
 
-**[Open the app →](https://davydmedvedchuk.github.io/Sixtap/)** · **[Sample estimate](docs/sample-estimate.png)**
+**[Open the app →](https://davydmedvedchuk.github.io/sixtap/)** · **[Sample estimate](docs/sample-estimate.png)**
 
 ![Sixtap: 6 taps and the price is ready](docs/banner.png)
 
