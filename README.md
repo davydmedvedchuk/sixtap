@@ -20,6 +20,7 @@ Sixtap asks one question per screen and gives an honest rough price on the spot.
 - **Bathroom.** Three taps. Per m² of floor plus fixtures.
 - **Installation.** A pick-and-count list.
 - **Estimate.** Your own items: name, quantity, price. A total and a PDF for the client, no kitchen or bathroom needed.
+- **List from an AI.** Copy a ready prompt, ask any AI for the list of works, paste the answer and the items appear in the estimate. Nothing is sent from the app.
 - **Your prices first.** Enter your own rates on first launch, or skip and fix them later. The defaults are rough guide numbers, not market truth.
 - **A message for the client.** Name, phone, one price and a note that it is approximate. Send it to WhatsApp or copy it. Written in Russian, Ukrainian, English or Portuguese.
 - **PDF for the client.** One page with your company name, the client, the date, the lines and the total. Share it from the phone or download it. Same four languages. Put your company name once under "My company for the PDF".
