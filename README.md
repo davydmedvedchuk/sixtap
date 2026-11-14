@@ -1,6 +1,6 @@
 # Sixtap
 
-**6 taps and the price is ready.** Quick estimates for kitchens, bathrooms and installation.
+**6 taps and the price is ready.** Quick estimates for kitchens, bathrooms and installation, as a WhatsApp message or a PDF.
 
 Pick the tier, set the length, get a price with a range. A message with the number goes to the client on WhatsApp while you're still standing in the kitchen. Free, no account.
 
@@ -21,6 +21,7 @@ Sixtap asks one question per screen and gives an honest rough price on the spot.
 - **Installation.** A pick-and-count list.
 - **Your prices first.** Enter your own rates on first launch, or skip and fix them later. The defaults are rough guide numbers, not market truth.
 - **A message for the client.** Name, phone, one price and a note that it is approximate. Send it to WhatsApp or copy it. Written in Russian, Ukrainian, English or Portuguese.
+- **PDF for the client.** One page with your company name, the client, the date, the lines and the total. Share it from the phone or download it. Same four languages. Put your company name once under "My company for the PDF".
 - **Saved estimates.** Reopen, edit, delete.
 - **Four languages in the app.** It picks yours from the phone and remembers the choice.
 - **Light and dark.** Same design, two brightness levels.
@@ -45,6 +46,7 @@ One `index.html`. No framework, no backend, no build step.
 
 - **Storage:** your prices and saved estimates stay in the browser (`localStorage`). Nothing is sent anywhere.
 - **Drawing:** the kitchen elevation is SVG, drawn from your numbers.
+- **PDF:** the page is drawn on a canvas and packed into a PDF by a small writer. Cyrillic works without embedding fonts.
 - **Fonts:** Barlow Condensed and IBM Plex, self-hosted in `assets/fonts`.
 - **Offline:** a service worker caches the app after the first visit.
 - **Hosting:** GitHub Pages. Free.
