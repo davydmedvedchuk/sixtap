@@ -45,7 +45,8 @@ One `index.html`. No framework, no backend, no build step.
 
 - **Storage:** your prices and saved estimates stay in the browser (`localStorage`). Nothing is sent anywhere.
 - **Drawing:** the kitchen elevation is SVG, drawn from your numbers.
-- **Fonts:** Barlow Condensed and IBM Plex, from Google Fonts.
+- **Fonts:** Barlow Condensed and IBM Plex, self-hosted in `assets/fonts`.
+- **Offline:** a service worker caches the app after the first visit.
 - **Hosting:** GitHub Pages. Free.
 
 ## Install on your phone
@@ -58,7 +59,7 @@ One `index.html`. No framework, no backend, no build step.
 ## Good to know
 
 - Data lives only in the browser you used. Another phone or browser starts empty.
-- It needs internet for the fonts on first load.
+- It needs internet only on the first visit. After that it works offline.
 
 ## Credits
 
@@ -66,4 +67,4 @@ Made by Davyd Medvedchuk.
 
 ## License
 
-[MIT](LICENSE).
+[MIT](LICENSE). Fonts: Barlow Condensed and IBM Plex, SIL Open Font License.

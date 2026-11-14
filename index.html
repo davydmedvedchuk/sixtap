@@ -6,7 +6,7 @@
 <meta name="description" content="Sixtap: 6 taps and the price is ready. A phone-first estimator for kitchens, bathrooms and installation.">
 <meta name="theme-color" content="#f3f2ec">
 <title>Sixtap</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Jost:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/fonts.css">
 <style>
 /* Layout idea: a phone app. Home with category tiles and a bottom bar whose centre button starts a one-question-per-screen flow (big cards, big buttons, price at the end). Detail screens sit behind each tile. Two looks via data-look (eng light, night dark); no brand marks of other apps. */
 
@@ -1219,6 +1219,7 @@ input, select, textarea { font-size: 16px !important; }
     }, function () { db = null; setStatus(T('Сервер недоступен. Данные сохраняются только в этом браузере.')); });
   }, function () { db = null; });
 })();
+  if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
 </script>
 </body>
 </html>
