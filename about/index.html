@@ -2,56 +2,62 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14181d">
 <title>Sixtap: 6 taps and the price is ready</title>
-<meta name="description" content="A quick estimate for kitchens, bathrooms and installation. Priced on the spot, sent to the client on WhatsApp or as a PDF. Free, no account.">
+<meta name="description" content="A quick estimate for kitchens, bathrooms and installation. Priced on the spot, sent to the client on WhatsApp or as a PDF. Free, no account, works offline.">
 <meta property="og:title" content="Sixtap: 6 taps and the price is ready">
 <meta property="og:description" content="Quick estimates for kitchens, bathrooms and installation. Free, no account.">
 <meta property="og:image" content="https://davydmedvedchuk.github.io/sixtap/about/img/social.jpg">
-<meta name="theme-color" content="#f3f2ec">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="stylesheet" href="../assets/fonts.css">
 <style>
-:root{--bg:#f3f2ec;--card:#fbfaf6;--ink:#14181d;--muted:#667079;--line:#cfcdc3;--pri:#ff6a1a;--gold:#c2410c}
-*{box-sizing:border-box;margin:0}
+:root{--deep:#14181d;--deep2:#1b2128;--orange:#ff6a1a;--bg:#f3f2ec;--card:#fbfaf6;--ink:#14181d;--muted:#667079;--line:#d9d6cb;--soft:#c9ced4;--gold:#c2410c}
+*{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font:400 17px/1.55 "IBM Plex Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
-  background-image:linear-gradient(rgba(20,24,29,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(20,24,29,.045) 1px,transparent 1px);background-size:32px 32px}
+body{margin:0;font-family:"IBM Plex Sans",-apple-system,system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-text-size-adjust:100%}
 a{color:inherit;text-decoration:none}
-.c{max-width:1120px;margin:0 auto;padding:0 28px}
-nav{display:flex;align-items:center;gap:22px;padding:22px 0}
-.brand{display:flex;align-items:center;gap:12px;font:600 15px "IBM Plex Mono",monospace;letter-spacing:.32em}
-.brand img{width:44px;height:33px}
-.links{display:flex;gap:22px;margin-left:auto;font-size:15px;color:var(--muted)}
-.lang{display:flex;gap:2px;border:1.5px solid var(--ink);border-radius:999px;padding:3px}
-.lang button{font:600 12px "IBM Plex Mono",monospace;border:0;background:none;color:var(--ink);padding:5px 9px;border-radius:999px;cursor:pointer}
-.lang button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
-.btn{display:inline-flex;align-items:center;justify-content:center;height:52px;padding:0 26px;border-radius:10px;font:600 17px "IBM Plex Sans",sans-serif;border:2px solid var(--ink)}
-.btn.go{background:var(--pri);color:var(--ink)}
-.btn.line{background:transparent}
-.btn.sm{height:42px;padding:0 18px;font-size:15px}
-h1,h2,h3{font-family:"Barlow Condensed","IBM Plex Sans",sans-serif;text-transform:uppercase;font-weight:600;line-height:.98}
-h1{font-size:clamp(56px,8vw,104px);letter-spacing:.2px}
-h1 em{font-style:normal;color:var(--pri)}
-h2{font-size:clamp(38px,5vw,56px);margin-bottom:12px}
-h3{font-size:25px;line-height:1.05;margin-bottom:6px}
-.kicker{font:500 13px "IBM Plex Mono",monospace;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
-.hero{padding:34px 0 0}
-.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:start}
-.lead{font-size:20px;color:var(--muted);max-width:520px;margin:20px 0 28px}
-.cta{display:flex;gap:12px;flex-wrap:wrap}
-.tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
-.tags span{font:500 13px "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;border:2px solid var(--ink);border-radius:8px;padding:7px 12px}
-.tags span:first-child{background:var(--pri)}
-.steps6{display:flex;align-items:center;gap:0;margin-top:30px;flex-wrap:wrap}
-.steps6 b{width:40px;height:40px;border:2px solid var(--ink);border-radius:50%;display:grid;place-items:center;font:600 16px "IBM Plex Mono",monospace;background:var(--bg)}
-.steps6 i{width:10px;border-top:2px dashed var(--ink)}
-.steps6 b:last-of-type{background:var(--pri)}
-.steps6 .sum{margin-left:14px;background:var(--ink);color:#fff;border-radius:6px;padding:7px 14px;font:500 20px "IBM Plex Mono",monospace;width:auto;height:auto;border:0}
+img{display:block;max-width:100%}
+.c{max-width:1180px;margin:0 auto;padding:0 40px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:52px;padding:0 24px;border-radius:14px;font-weight:600;font-size:16px;white-space:nowrap}
+.btn.go{background:var(--orange);color:var(--ink)}
+.btn.ghost{border:1.5px solid rgba(255,255,255,.45);color:#fff}
+.btn.dark{background:var(--deep);color:#fff}
+.btn.sm{height:40px;padding:0 16px;font-size:14px;border-radius:11px}
+.kicker{font:500 14px "IBM Plex Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+h1,h2,h3{margin:0;font-family:"Barlow Condensed","IBM Plex Sans",sans-serif;text-transform:uppercase}
+h2{font-weight:700;font-size:54px;letter-spacing:.2px;line-height:1.02;margin-bottom:16px}
+.sub{font-size:18px;color:var(--muted);margin:0 0 44px;max-width:640px;line-height:1.5}
+section{padding:100px 0}
 
-/* the one iPhone: same frame as the banners */
-.phone{width:300px;height:651px;margin:0 auto -90px;background:#07080a;border:2px solid #4a525c;border-radius:54px;padding:8px;box-shadow:0 40px 70px rgba(20,24,29,.28),inset 0 0 0 1px #1d2228;position:relative;z-index:2}
+/* hero */
+.hero{position:relative;color:#fff;background:var(--deep);background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:36px 36px}
+.hero>.c{position:relative}
+nav{display:flex;align-items:center;gap:26px;padding:20px 0}
+.brand{display:flex;align-items:center;gap:12px;font:600 15px "IBM Plex Mono",monospace;letter-spacing:.3em}
+.brand img{width:42px;height:31px}
+.links{display:flex;gap:24px;margin-left:auto;font-size:15px;color:#d5dbe2}
+.links a:hover{color:#fff}
+.lang{display:flex;gap:2px;background:rgba(255,255,255,.1);border-radius:10px;padding:3px}
+.lang button{font:inherit;font-size:13px;font-weight:600;color:#d5dbe2;background:none;border:0;border-radius:8px;padding:6px 9px;cursor:pointer}
+.lang button[aria-pressed=true]{background:#fff;color:var(--ink)}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:end;padding:44px 0 0}
+.eyebrow{display:inline-block;font:500 14px "IBM Plex Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);background:rgba(255,106,26,.14);padding:7px 12px;border-radius:999px;margin-bottom:20px}
+h1{font-size:104px;line-height:.95;letter-spacing:.3px;margin-bottom:22px;font-weight:600}
+h1 span{color:var(--orange)}
+.lead{font-size:19px;line-height:1.5;color:#d5dbe2;margin:0 0 30px;max-width:520px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px}
+.ticks{display:flex;gap:10px 22px;flex-wrap:wrap;font-size:15px;color:#d5dbe2;margin-bottom:34px}
+.ticks span::before{content:"✓";color:var(--orange);font-weight:800;margin-right:7px}
+.qrline{display:flex;align-items:center;gap:14px;padding-bottom:64px}
+.qrline .q{background:#fff;border-radius:12px;padding:8px}
+.qrline img{width:72px;height:72px}
+.qrline b{display:block;font-size:15px}
+.qrline small{color:#aab2bb;font-size:13px}
+
+/* the one iPhone */
+.phone{width:300px;height:651px;margin:0 auto -60px;background:#07080a;border:2px solid #4a525c;border-radius:54px;padding:8px;box-shadow:0 40px 80px rgba(0,0,0,.5),inset 0 0 0 1px #1d2228;position:relative;z-index:2}
 .screen{width:100%;height:100%;border-radius:45px;overflow:hidden;background:#f3f2ec;position:relative}
 .screen img.app{position:absolute;left:0;top:34px;width:100%}
 .isl{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:86px;height:25px;border-radius:13px;background:#000;z-index:4}
@@ -61,40 +67,68 @@ h3{font-size:25px;line-height:1.05;margin-bottom:6px}
 .sb span{position:absolute;right:24px;top:11px;display:flex;gap:5px;align-items:center}
 .pb{position:absolute;width:4px;background:#2c323a;border-radius:2px}
 
-section{padding:84px 0}
-.sub{color:var(--muted);max-width:620px;margin-bottom:34px}
-.sixgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.card{background:var(--card);border:1.5px solid var(--ink);border-radius:14px;padding:22px}
-.card .n{display:inline-grid;place-items:center;width:34px;height:34px;border:2px solid var(--ink);border-radius:50%;font:600 15px "IBM Plex Mono",monospace;margin-bottom:12px}
-.card p{color:var(--muted);font-size:16px}
-.feat{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.feat .card{display:flex;gap:16px}
-.feat .card:before{content:"";flex:none;width:10px;height:10px;margin-top:9px;border-radius:50%;background:var(--pri);box-shadow:0 0 0 3px var(--bg),0 0 0 4.5px var(--ink)}
-.sample{display:grid;grid-template-columns:.9fr 1.1fr;gap:44px;align-items:center}
-.sample img{width:100%;border:1.5px solid var(--ink);border-radius:14px;background:#fff}
-.note{margin-top:18px;border-left:4px solid var(--pri);padding:6px 0 6px 16px;color:var(--muted);font-size:16px}
-details{border-top:1.5px solid var(--ink);padding:18px 0}
-details:last-of-type{border-bottom:1.5px solid var(--ink)}
-summary{cursor:pointer;font:600 22px "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.3px;list-style:none;display:flex;justify-content:space-between}
-summary::-webkit-details-marker{display:none}
-summary:after{content:"+";font:500 22px "IBM Plex Mono",monospace}
-details[open] summary:after{content:"–"}
-details p{color:var(--muted);margin-top:10px;max-width:720px}
-.final{background:var(--ink);color:#fff;border-radius:20px;padding:56px 44px;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
-.final h2{color:#fff;margin:0 0 10px}
-.final p{color:#c9ced4}
-.final .btn.go{border-color:var(--pri)}
-.how2{display:grid;gap:10px;font-size:15px;color:#c9ced4}
-.how2 b{color:#fff}
+/* how it works */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.step{display:flex;gap:16px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px}
+.step .n{flex:0 0 44px;height:44px;border-radius:50%;background:var(--deep);color:var(--orange);font:600 22px "Barlow Condensed",sans-serif;display:flex;align-items:center;justify-content:center}
+.step h3{margin:6px 0 6px;font-size:26px;font-weight:600}
+.step p{margin:0;color:var(--muted);line-height:1.5}
+
+/* sample */
+.rg{display:grid;grid-template-columns:1.05fr .95fr;gap:70px;align-items:center}
+.paper{background:#e6e3d8;border-radius:24px;padding:30px;display:flex;justify-content:center}
+.paper img{width:100%;border-radius:8px;box-shadow:0 30px 60px rgba(20,24,29,.22)}
+.list{list-style:none;padding:0;margin:0 0 30px}
+.list li{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:16px}
+.list li::before{content:"";flex:0 0 22px;height:22px;border-radius:50%;background:var(--orange) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12l4 4 8-9' fill='none' stroke='%2314181d' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.note{border-left:4px solid var(--orange);padding:4px 0 4px 16px;color:var(--muted);font-size:15px;margin:0 0 26px}
+
+/* three flows */
+.shots{background:var(--deep);color:#fff}
+.shots .kicker{color:var(--orange)}
+.shots .sub{color:#b4bcc5}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pc{background:var(--deep2);border:1px solid #2d353f;border-radius:20px;overflow:hidden}
+.pc .im{position:relative;background:#f3f2ec}
+.pc img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:top}
+.pc .n{position:absolute;right:12px;top:12px;width:32px;height:32px;border-radius:50%;background:var(--orange);color:var(--ink);font-weight:700;display:flex;align-items:center;justify-content:center}
+.pc .t{padding:18px 20px 22px}
+.pc h3{font-size:26px;font-weight:600;margin-bottom:6px}
+.pc p{margin:0;color:#b4bcc5;line-height:1.5;font-size:15px}
+
+/* faq */
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:14px 24px}
+.qa{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+.qa b{display:block;font-size:17px;margin-bottom:8px}
+.qa p{margin:0;color:var(--muted);font-size:15px;line-height:1.5}
+
+/* final */
+.final{border-radius:28px;color:#fff;background:var(--deep);background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:36px 36px}
+.final .in{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;padding:64px 56px}
+.final h2{color:#fff}
+.final p{color:#c9ced4;font-size:18px;line-height:1.5;margin:0 0 26px;max-width:520px}
+.qb{background:#fff;border-radius:18px;padding:14px}
+.qb img{width:150px;height:150px}
 footer{padding:36px 0 50px;color:var(--muted);font-size:14px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 footer a{text-decoration:underline}
+
 @media (max-width:900px){
-  .c{padding:0 18px}.links,nav .btn{display:none}.lang{margin-left:auto}
-  .hero-grid{grid-template-columns:1fr}
-  .phone{transform:scale(.88);transform-origin:top center;margin-bottom:-130px}
-  .sixgrid,.feat,.sample,.final{grid-template-columns:1fr}
-  section{padding:60px 0}.final{padding:36px 24px}
-  .lead{font-size:18px}
+  .c{padding:0 18px}
+  .links,nav .btn{display:none}
+  .lang{margin-left:auto}
+  .hero-grid{grid-template-columns:1fr;padding-top:14px;gap:10px}
+  h1{font-size:64px}
+  .lead{font-size:17px}
+  .cta .btn{flex:1;padding:0 12px}
+  .qrline{display:none}
+  .phone{transform:scale(.86);transform-origin:top center;margin-bottom:-110px}
+  section{padding:64px 0}
+  h2{font-size:40px}
+  .sub{font-size:16px;margin-bottom:28px}
+  .steps,.pg,.faq,.rg{grid-template-columns:1fr;gap:14px}
+  .rg{gap:34px}
+  .final .in{grid-template-columns:1fr;padding:38px 24px}
+  .qb{display:none}
 }
 </style>
 </head>
@@ -108,11 +142,12 @@ footer a{text-decoration:underline}
   </nav>
   <div class="hero-grid" id="top">
     <div>
-      <h1><span data-t="h1a"></span><br><em data-t="h1b"></em></h1>
+      <span class="eyebrow" data-t="eyebrow"></span>
+      <h1><span data-t="h1a"></span> <span style="color:#fff" data-t="h1b"></span></h1>
       <p class="lead" data-t="lead"></p>
-      <div class="cta"><a class="btn go" href="../" data-t="start"></a><a class="btn line" href="#sample" data-t="seeSample"></a></div>
-      <div class="steps6" aria-hidden="true"><b>1</b><i></i><b>2</b><i></i><b>3</b><i></i><b>4</b><i></i><b>5</b><i></i><b>6</b><b class="sum">3,690 €</b></div>
-      <div class="tags"><span data-t="t1"></span><span data-t="t2"></span><span data-t="t3"></span></div>
+      <div class="cta"><a class="btn go" href="../" data-t="start"></a><a class="btn ghost" href="#sample" data-t="seeSample"></a></div>
+      <div class="ticks"><span data-t="t1"></span><span data-t="t2"></span><span data-t="t3"></span></div>
+      <div class="qrline"><div class="q"><img src="img/qr.svg" alt=""></div><div><b data-t="qrTitle"></b><small data-t="qrSub"></small></div></div>
     </div>
     <div>
       <div class="phone" aria-hidden="true">
@@ -126,97 +161,93 @@ footer a{text-decoration:underline}
   </div>
 </div></header>
 
-<section id="how" style="padding-top:150px"><div class="c">
+<section id="how" style="padding-top:130px"><div class="c">
   <div class="kicker" data-t="howK"></div>
   <h2 data-t="howH"></h2>
   <p class="sub" data-t="howSub"></p>
-  <div class="sixgrid">
-    <div class="card"><div class="n">1</div><h3 data-t="k1h"></h3><p data-t="k1p"></p></div>
-    <div class="card"><div class="n">2</div><h3 data-t="k2h"></h3><p data-t="k2p"></p></div>
-    <div class="card"><div class="n">3</div><h3 data-t="k3h"></h3><p data-t="k3p"></p></div>
-    <div class="card"><div class="n">4</div><h3 data-t="k4h"></h3><p data-t="k4p"></p></div>
-    <div class="card"><div class="n">5</div><h3 data-t="k5h"></h3><p data-t="k5p"></p></div>
-    <div class="card"><div class="n">6</div><h3 data-t="k6h"></h3><p data-t="k6p"></p></div>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><div><h3 data-t="s1h"></h3><p data-t="s1p"></p></div></div>
+    <div class="step"><div class="n">2</div><div><h3 data-t="s2h"></h3><p data-t="s2p"></p></div></div>
+    <div class="step"><div class="n">3</div><div><h3 data-t="s3h"></h3><p data-t="s3p"></p></div></div>
   </div>
 </div></section>
 
-<section style="padding-top:20px"><div class="c">
-  <div class="kicker" data-t="insK"></div>
-  <h2 data-t="insH"></h2>
-  <div class="feat" style="margin-top:26px">
-    <div class="card"><div><h3 data-t="f1h"></h3><p data-t="f1p"></p></div></div>
-    <div class="card"><div><h3 data-t="f2h"></h3><p data-t="f2p"></p></div></div>
-    <div class="card"><div><h3 data-t="f3h"></h3><p data-t="f3p"></p></div></div>
-    <div class="card"><div><h3 data-t="f4h"></h3><p data-t="f4p"></p></div></div>
-    <div class="card"><div><h3 data-t="f5h"></h3><p data-t="f5p"></p></div></div>
-    <div class="card"><div><h3 data-t="f6h"></h3><p data-t="f6p"></p></div></div>
-  </div>
-</div></section>
-
-<section id="sample" style="padding-top:30px"><div class="c sample">
+<section id="sample" style="padding-top:20px"><div class="c rg">
+  <div class="paper"><img src="img/sample.jpg" alt="" loading="lazy"></div>
   <div>
-    <div class="kicker" data-t="smK"></div>
-    <h2 data-t="smH"></h2>
-    <p class="sub" style="margin-bottom:0" data-t="smP"></p>
+    <div class="kicker" data-t="repK"></div>
+    <h2 data-t="repH"></h2>
+    <p class="sub" style="margin-bottom:24px" data-t="repSub"></p>
+    <ul class="list"><li data-t="r1"></li><li data-t="r2"></li><li data-t="r3"></li><li>English, Português, Русский, Українська</li></ul>
     <p class="note" data-t="acc"></p>
+    <a class="btn dark" href="../" data-t="open"></a>
   </div>
-  <img src="img/sample.jpg" alt="" loading="lazy">
 </div></section>
 
-<section id="faq" style="padding-top:30px"><div class="c">
+<section class="shots"><div class="c">
+  <div class="kicker" data-t="flK"></div>
+  <h2 data-t="flH"></h2>
+  <p class="sub" data-t="flSub"></p>
+  <div class="pg">
+    <div class="pc"><div class="im"><img src="img/kitchen.jpg" alt="" loading="lazy"><span class="n">1</span></div><div class="t"><h3 data-t="p1h"></h3><p data-t="p1p"></p></div></div>
+    <div class="pc"><div class="im"><img src="img/bathroom.jpg" alt="" loading="lazy"><span class="n">2</span></div><div class="t"><h3 data-t="p2h"></h3><p data-t="p2p"></p></div></div>
+    <div class="pc"><div class="im"><img src="img/length.jpg" alt="" loading="lazy"><span class="n">3</span></div><div class="t"><h3 data-t="p3h"></h3><p data-t="p3p"></p></div></div>
+  </div>
+</div></section>
+
+<section id="faq"><div class="c">
   <div class="kicker">FAQ</div>
-  <h2 data-t="faqH"></h2>
-  <div style="margin-top:22px">
-    <details><summary data-t="q1"></summary><p data-t="a1"></p></details>
-    <details><summary data-t="q2"></summary><p data-t="a2"></p></details>
-    <details><summary data-t="q3"></summary><p data-t="a3"></p></details>
-    <details><summary data-t="q4"></summary><p data-t="a4"></p></details>
-    <details><summary data-t="q5"></summary><p data-t="a5"></p></details>
+  <h2 style="margin-bottom:30px" data-t="faqH"></h2>
+  <div class="faq">
+    <div class="qa"><b data-t="q1"></b><p data-t="a1"></p></div>
+    <div class="qa"><b data-t="q2"></b><p data-t="a2"></p></div>
+    <div class="qa"><b data-t="q3"></b><p data-t="a3"></p></div>
+    <div class="qa"><b data-t="q4"></b><p data-t="a4"></p></div>
   </div>
 </div></section>
 
-<section style="padding-top:20px"><div class="c">
-  <div class="final">
-    <div><h2 data-t="finH"></h2><p data-t="finP" style="margin-bottom:22px"></p><a class="btn go" href="../" data-t="finBtn"></a></div>
-    <div class="how2"><div><b>iPhone</b> · Safari → Share → Add to Home Screen</div><div><b>Android</b> · Chrome → ⋮ → Add to Home screen</div></div>
-  </div>
-  <footer><span>© Davyd Medvedchuk · MIT</span><span><a href="https://github.com/davydmedvedchuk/sixtap">GitHub</a></span></footer>
+<section style="padding-top:0"><div class="c">
+  <div class="final"><div class="in">
+    <div><h2 data-t="finH"></h2><p data-t="finP"></p><a class="btn go" href="../" data-t="finBtn"></a></div>
+    <div class="qb"><img src="img/qr.svg" alt=""></div>
+  </div></div>
+  <footer><span data-t="foot1"></span><span><span data-t="foot2"></span> · <a href="https://github.com/davydmedvedchuk/sixtap">GitHub</a></span></footer>
 </div></section>
 
 <script>
 const T={
-en:{nHow:'How it works',nSample:'Sample',open:'Open the app',h1a:'6 taps and the price',h1b:'is ready.',lead:'A quick estimate for kitchens, bathrooms and installation. Priced on the spot, while the client is still standing there.',start:'Start for free',seeSample:'See a sample',t1:'Free',t2:'No account',t3:'EN · PT · RU · UA',
-howK:'How it works',howH:'One question per screen',howSub:'Six taps for a kitchen. Each screen asks one thing and the price updates as you go.',
-k1h:'Tier',k1p:'Basic, Standard or Extended. The drawing of the kitchen changes with it.',k2h:'Length',k2p:'How many metres of kitchen. Priced per linear metre.',k3h:'Wall units',k3p:'Do you need them, and how many.',k4h:'Tall units',k4p:'Pantry or fridge columns.',k5h:'Worktop',k5p:'Pick the material for the top.',k6h:'Installation',k6p:'Add the fitting work. The price is ready.',
-insK:'What is inside',insH:'More than a kitchen',f1h:'Kitchen, bathroom, installation',f1p:'Three ready flows. Bathroom takes three taps, installation is a pick-and-count list.',f2h:'Your own estimate',f2p:'Add items: name, quantity, price. Get a total and a PDF for the client.',f3h:'WhatsApp message',f3p:'Name, phone, one price and a note that it is approximate. Send it or copy it.',f4h:'PDF for the client',f4p:'One page with your company name, the date, the lines and the total.',f5h:'Your prices first',f5p:'Enter your own rates, or fix them later. The defaults are only rough guide numbers.',f6h:'Works offline',f6p:'After the first visit it needs no internet. Your data stays in your browser.',
-smK:'Sample',smH:'What your client gets',smP:'The result screen and the message that goes to WhatsApp. One number and a range, not a long spreadsheet.',acc:'Accuracy is roughly 15–20 %. It is a conversation tool, not a final quote. Then you measure properly and send the real one.',
-faqH:'Questions',q1:'How much does it cost?',a1:'Nothing. No account, no subscription, no ads.',q2:'How accurate is the price?',a2:'About 15–20 %. The kitchen shows a range of ±15 % by default, and the client message says the price is approximate.',q3:'Where is my data?',a3:'Only in your browser. Prices and saved estimates are never sent anywhere.',q4:'Do I need internet?',a4:'Only on the first visit. After that it works offline.',q5:'Which languages?',a5:'The app and the PDF come in English, Portuguese, Russian and Ukrainian.',
-finH:'Next client. First price.',finP:'Open it on your phone and add it to your Home Screen. It takes ten seconds.',finBtn:'Open Sixtap'},
-pt:{nHow:'Como funciona',nSample:'Exemplo',open:'Abrir a app',h1a:'6 toques e o preço',h1b:'está pronto.',lead:'Um orçamento rápido para cozinhas, casas de banho e instalação. Com preço na hora, enquanto o cliente ainda está ao seu lado.',start:'Começar grátis',seeSample:'Ver exemplo',t1:'Grátis',t2:'Sem conta',t3:'EN · PT · RU · UA',
-howK:'Como funciona',howH:'Uma pergunta por ecrã',howSub:'Seis toques para uma cozinha. Cada ecrã pergunta uma coisa e o preço atualiza-se.',
-k1h:'Gama',k1p:'Básica, Standard ou Extended. O desenho da cozinha muda com ela.',k2h:'Comprimento',k2p:'Quantos metros de cozinha. Preço por metro linear.',k3h:'Armários altos de parede',k3p:'Se precisa deles e quantos.',k4h:'Colunas',k4p:'Despensa ou coluna do frigorífico.',k5h:'Bancada',k5p:'Escolha o material do tampo.',k6h:'Instalação',k6p:'Junte a montagem. O preço está pronto.',
-insK:'O que tem dentro',insH:'Mais do que uma cozinha',f1h:'Cozinha, casa de banho, instalação',f1p:'Três fluxos prontos. A casa de banho leva três toques, a instalação é uma lista para escolher e contar.',f2h:'O seu orçamento',f2p:'Adicione itens: nome, quantidade, preço. Obtenha o total e um PDF para o cliente.',f3h:'Mensagem de WhatsApp',f3p:'Nome, telefone, um preço e uma nota de que é aproximado. Envie ou copie.',f4h:'PDF para o cliente',f4p:'Uma página com o nome da sua empresa, a data, as linhas e o total.',f5h:'Primeiro os seus preços',f5p:'Introduza as suas tarifas ou corrija depois. Os valores iniciais são só uma referência.',f6h:'Funciona offline',f6p:'Depois da primeira visita não precisa de internet. Os dados ficam no seu navegador.',
-smK:'Exemplo',smH:'O que o cliente recebe',smP:'O ecrã de resultado e a mensagem que vai para o WhatsApp. Um número e um intervalo, sem folha de cálculo.',acc:'A precisão é de cerca de 15–20 %. É uma ferramenta de conversa, não um orçamento final. Depois mede com rigor e envia o verdadeiro.',
-faqH:'Perguntas',q1:'Quanto custa?',a1:'Nada. Sem conta, sem subscrição, sem anúncios.',q2:'Quão preciso é o preço?',a2:'Cerca de 15–20 %. A cozinha mostra por defeito um intervalo de ±15 % e a mensagem ao cliente diz que o preço é aproximado.',q3:'Onde ficam os meus dados?',a3:'Só no seu navegador. Preços e orçamentos guardados nunca são enviados para lado nenhum.',q4:'Preciso de internet?',a4:'Só na primeira visita. Depois funciona offline.',q5:'Que idiomas?',a5:'A app e o PDF existem em inglês, português, russo e ucraniano.',
-finH:'Próximo cliente. Primeiro preço.',finP:'Abra no telemóvel e adicione ao ecrã principal. Leva dez segundos.',finBtn:'Abrir Sixtap'},
-ru:{nHow:'Как это работает',nSample:'Пример',open:'Открыть приложение',h1a:'6 нажатий и цена',h1b:'готова.',lead:'Быстрая смета для кухонь, санузлов и монтажа. Цена на месте, пока клиент ещё стоит рядом.',start:'Начать бесплатно',seeSample:'Смотреть пример',t1:'Бесплатно',t2:'Без аккаунта',t3:'EN · PT · RU · UA',
-howK:'Как это работает',howH:'Один вопрос на экран',howSub:'Шесть нажатий для кухни. Каждый экран спрашивает одно, цена обновляется по ходу.',
-k1h:'Уровень',k1p:'Базовый, Стандарт или Расширенный. Рисунок кухни меняется вместе с ним.',k2h:'Длина',k2p:'Сколько метров кухни. Цена за погонный метр.',k3h:'Верхние шкафы',k3p:'Нужны ли и сколько.',k4h:'Колонны',k4p:'Пенал или колонна под холодильник.',k5h:'Столешница',k5p:'Выбери материал столешницы.',k6h:'Монтаж',k6p:'Добавь работы по установке. Цена готова.',
-insK:'Что внутри',insH:'Не только кухня',f1h:'Кухня, санузел, монтаж',f1p:'Три готовых сценария. Санузел занимает три нажатия, монтаж это список для выбора и подсчёта.',f2h:'Своя смета',f2p:'Добавляй позиции: название, количество, цена. Получай итог и PDF для клиента.',f3h:'Сообщение в WhatsApp',f3p:'Имя, телефон, одна цена и пометка, что она примерная. Отправь или скопируй.',f4h:'PDF для клиента',f4p:'Одна страница: название твоей фирмы, дата, строки и итог.',f5h:'Сначала твои цены',f5p:'Введи свои расценки или поправь позже. Стартовые цифры только ориентир.',f6h:'Работает офлайн',f6p:'После первого визита интернет не нужен. Данные остаются в твоём браузере.',
-smK:'Пример',smH:'Что получает клиент',smP:'Экран результата и сообщение, которое уходит в WhatsApp. Одна цифра и вилка, без длинной таблицы.',acc:'Точность примерно 15–20 %. Это инструмент для разговора, не окончательное КП. Потом ты замеряешь как следует и отправляешь настоящее.',
-faqH:'Вопросы',q1:'Сколько это стоит?',a1:'Ничего. Без аккаунта, подписки и рекламы.',q2:'Насколько точна цена?',a2:'Примерно 15–20 %. Для кухни по умолчанию показана вилка ±15 %, а в сообщении клиенту написано, что цена примерная.',q3:'Где мои данные?',a3:'Только в твоём браузере. Цены и сохранённые сметы никуда не отправляются.',q4:'Нужен ли интернет?',a4:'Только при первом визите. Дальше работает офлайн.',q5:'Какие языки?',a5:'Приложение и PDF есть на английском, португальском, русском и украинском.',
-finH:'Следующий клиент. Первая цена.',finP:'Открой на телефоне и добавь на главный экран. Это десять секунд.',finBtn:'Открыть Sixtap'},
-ua:{nHow:'Як це працює',nSample:'Приклад',open:'Відкрити застосунок',h1a:'6 натискань і ціна',h1b:'готова.',lead:'Швидкий кошторис для кухонь, санвузлів і монтажу. Ціна на місці, поки клієнт ще стоїть поруч.',start:'Почати безкоштовно',seeSample:'Дивитись приклад',t1:'Безкоштовно',t2:'Без акаунта',t3:'EN · PT · RU · UA',
-howK:'Як це працює',howH:'Одне питання на екран',howSub:'Шість натискань для кухні. Кожен екран питає одне, ціна оновлюється по ходу.',
-k1h:'Рівень',k1p:'Базовий, Стандарт або Розширений. Малюнок кухні змінюється разом з ним.',k2h:'Довжина',k2p:'Скільки метрів кухні. Ціна за погонний метр.',k3h:'Верхні шафи',k3p:'Чи потрібні і скільки.',k4h:'Колони',k4p:'Пенал або колона під холодильник.',k5h:'Стільниця',k5p:'Обери матеріал стільниці.',k6h:'Монтаж',k6p:'Додай роботи зі встановлення. Ціна готова.',
-insK:'Що всередині',insH:'Не лише кухня',f1h:'Кухня, санвузол, монтаж',f1p:'Три готові сценарії. Санвузол займає три натискання, монтаж це список для вибору і підрахунку.',f2h:'Власний кошторис',f2p:'Додавай позиції: назва, кількість, ціна. Отримуй підсумок і PDF для клієнта.',f3h:'Повідомлення у WhatsApp',f3p:'Імʼя, телефон, одна ціна і примітка, що вона приблизна. Надішли або скопіюй.',f4h:'PDF для клієнта',f4p:'Одна сторінка: назва твоєї фірми, дата, рядки і підсумок.',f5h:'Спочатку твої ціни',f5p:'Введи свої розцінки або виправ пізніше. Стартові цифри лише орієнтир.',f6h:'Працює офлайн',f6p:'Після першого візиту інтернет не потрібен. Дані лишаються у твоєму браузері.',
-smK:'Приклад',smH:'Що отримує клієнт',smP:'Екран результату і повідомлення, що йде у WhatsApp. Одна цифра і вилка, без довгої таблиці.',acc:'Точність приблизно 15–20 %. Це інструмент для розмови, не остаточна пропозиція. Потім ти заміряєш як слід і надсилаєш справжню.',
-faqH:'Питання',q1:'Скільки це коштує?',a1:'Нічого. Без акаунта, підписки та реклами.',q2:'Наскільки точна ціна?',a2:'Приблизно 15–20 %. Для кухні за замовчуванням показана вилка ±15 %, а в повідомленні клієнту написано, що ціна приблизна.',q3:'Де мої дані?',a3:'Лише у твоєму браузері. Ціни та збережені кошториси нікуди не надсилаються.',q4:'Чи потрібен інтернет?',a4:'Лише при першому візиті. Далі працює офлайн.',q5:'Які мови?',a5:'Застосунок і PDF є англійською, португальською, російською та українською.',
-finH:'Наступний клієнт. Перша ціна.',finP:'Відкрий на телефоні й додай на головний екран. Це десять секунд.',finBtn:'Відкрити Sixtap'}
+en:{nHow:'How it works',nSample:'Sample',open:'Open the app',eyebrow:'For installers and kitchen crews',h1a:'6 taps.',h1b:'Price ready.',lead:'A quick estimate for kitchens, bathrooms and installation. Priced on the spot, while the client is still standing there.',start:'Start for free',seeSample:'See a sample',t1:'No account',t2:'Works offline',t3:'Data stays on your phone',qrTitle:'Open it on your phone',qrSub:'Point your camera at the code',
+howK:'How it works',howH:'Tap, tap, price',howSub:'One question per screen. The price updates as you go.',
+s1h:'Pick the tier',s1p:'Basic, Standard or Extended. The kitchen drawing changes with it.',s2h:'Set the size',s2p:'Length, wall units, tall units, worktop, installation. Six taps for a kitchen.',s3h:'Send it',s3p:'A message with one price goes to the client on WhatsApp, or a PDF with your name.',
+repK:'Sample',repH:'What your client gets',repSub:'The result screen and the message that goes to WhatsApp.',r1:'One price and a range, not a spreadsheet',r2:'A note that the price is approximate',r3:'PDF with your company name, date, lines and total',acc:'Accuracy is roughly 15–20 %. It is a conversation tool, not a final quote.',
+flK:'Inside',flH:'Three flows, one app',flSub:'Kitchen, bathroom and installation are ready to use. Your own prices come first.',p1h:'Kitchen',p1p:'Six taps. Priced per linear metre, with a live drawing.',p2h:'Bathroom',p2p:'Three taps. Per m² of floor plus fixtures.',p3h:'Your own list',p3p:'Add items with a name, quantity and price. Get a total and a PDF.',
+faqH:'Questions',q1:'How much does it cost?',a1:'Nothing. No account, no subscription, no ads.',q2:'How accurate is the price?',a2:'About 15–20 %. The kitchen shows a range of ±15 % by default, and the client message says the price is approximate.',q3:'Where is my data?',a3:'Only in your browser. Prices and saved estimates are never sent anywhere.',q4:'Do I need internet?',a4:'Only on the first visit. After that it works offline. English, Portuguese, Russian and Ukrainian.',
+finH:'Next client. First price.',finP:'Open it on your phone and add it to your Home Screen. Ten seconds.',finBtn:'Open Sixtap',foot1:'© Davyd Medvedchuk',foot2:'MIT'},
+pt:{nHow:'Como funciona',nSample:'Exemplo',open:'Abrir a app',eyebrow:'Para instaladores e equipas de cozinhas',h1a:'6 toques.',h1b:'Preço pronto.',lead:'Um orçamento rápido para cozinhas, casas de banho e instalação. Com preço na hora, enquanto o cliente ainda está ao seu lado.',start:'Começar grátis',seeSample:'Ver exemplo',t1:'Sem conta',t2:'Funciona offline',t3:'Os dados ficam no telemóvel',qrTitle:'Abra no telemóvel',qrSub:'Aponte a câmara ao código',
+howK:'Como funciona',howH:'Toque, toque, preço',howSub:'Uma pergunta por ecrã. O preço atualiza-se ao longo do caminho.',
+s1h:'Escolha a gama',s1p:'Básica, Standard ou Extended. O desenho da cozinha muda com ela.',s2h:'Defina o tamanho',s2p:'Comprimento, armários, colunas, bancada, instalação. Seis toques para uma cozinha.',s3h:'Envie',s3p:'Uma mensagem com um preço vai para o cliente no WhatsApp, ou um PDF com o seu nome.',
+repK:'Exemplo',repH:'O que o cliente recebe',repSub:'O ecrã de resultado e a mensagem que vai para o WhatsApp.',r1:'Um preço e um intervalo, sem folha de cálculo',r2:'Uma nota de que o preço é aproximado',r3:'PDF com o nome da empresa, data, linhas e total',acc:'A precisão é de cerca de 15–20 %. É uma ferramenta de conversa, não um orçamento final.',
+flK:'Por dentro',flH:'Três fluxos, uma app',flSub:'Cozinha, casa de banho e instalação prontas a usar. Primeiro os seus preços.',p1h:'Cozinha',p1p:'Seis toques. Preço por metro linear, com desenho em tempo real.',p2h:'Casa de banho',p2p:'Três toques. Por m² de piso mais equipamentos.',p3h:'A sua lista',p3p:'Adicione itens com nome, quantidade e preço. Obtenha o total e um PDF.',
+faqH:'Perguntas',q1:'Quanto custa?',a1:'Nada. Sem conta, sem subscrição, sem anúncios.',q2:'Quão preciso é o preço?',a2:'Cerca de 15–20 %. A cozinha mostra por defeito um intervalo de ±15 % e a mensagem ao cliente diz que o preço é aproximado.',q3:'Onde ficam os meus dados?',a3:'Só no seu navegador. Preços e orçamentos guardados nunca são enviados para lado nenhum.',q4:'Preciso de internet?',a4:'Só na primeira visita. Depois funciona offline. Inglês, português, russo e ucraniano.',
+finH:'Próximo cliente. Primeiro preço.',finP:'Abra no telemóvel e adicione ao ecrã principal. Dez segundos.',finBtn:'Abrir Sixtap',foot1:'© Davyd Medvedchuk',foot2:'MIT'},
+ru:{nHow:'Как это работает',nSample:'Пример',open:'Открыть приложение',eyebrow:'Для монтажников и кухонных бригад',h1a:'6 нажатий.',h1b:'Цена готова.',lead:'Быстрая смета для кухонь, санузлов и монтажа. Цена на месте, пока клиент ещё стоит рядом.',start:'Начать бесплатно',seeSample:'Смотреть пример',t1:'Без аккаунта',t2:'Работает офлайн',t3:'Данные остаются на телефоне',qrTitle:'Открой на телефоне',qrSub:'Наведи камеру на код',
+howK:'Как это работает',howH:'Нажал, нажал, цена',howSub:'Один вопрос на экран. Цена обновляется по ходу.',
+s1h:'Выбери уровень',s1p:'Базовый, Стандарт или Расширенный. Рисунок кухни меняется вместе с ним.',s2h:'Задай размер',s2p:'Длина, верхние шкафы, колонны, столешница, монтаж. Шесть нажатий на кухню.',s3h:'Отправь',s3p:'Сообщение с одной ценой уходит клиенту в WhatsApp, или PDF с твоим названием.',
+repK:'Пример',repH:'Что получает клиент',repSub:'Экран результата и сообщение, которое уходит в WhatsApp.',r1:'Одна цена и вилка, без таблицы',r2:'Пометка, что цена примерная',r3:'PDF с названием фирмы, датой, строками и итогом',acc:'Точность примерно 15–20 %. Это инструмент для разговора, не окончательное КП.',
+flK:'Внутри',flH:'Три сценария, одно приложение',flSub:'Кухня, санузел и монтаж готовы к работе. Сначала твои цены.',p1h:'Кухня',p1p:'Шесть нажатий. Цена за погонный метр, рисунок меняется сразу.',p2h:'Санузел',p2p:'Три нажатия. За м² пола плюс сантехника.',p3h:'Свой список',p3p:'Добавляй позиции: название, количество, цена. Получай итог и PDF.',
+faqH:'Вопросы',q1:'Сколько это стоит?',a1:'Ничего. Без аккаунта, подписки и рекламы.',q2:'Насколько точна цена?',a2:'Примерно 15–20 %. Для кухни по умолчанию показана вилка ±15 %, а в сообщении клиенту написано, что цена примерная.',q3:'Где мои данные?',a3:'Только в твоём браузере. Цены и сохранённые сметы никуда не отправляются.',q4:'Нужен ли интернет?',a4:'Только при первом визите. Дальше работает офлайн. Английский, португальский, русский и украинский.',
+finH:'Следующий клиент. Первая цена.',finP:'Открой на телефоне и добавь на главный экран. Десять секунд.',finBtn:'Открыть Sixtap',foot1:'© Давид Медведчук',foot2:'MIT'},
+ua:{nHow:'Як це працює',nSample:'Приклад',open:'Відкрити застосунок',eyebrow:'Для монтажників і кухонних бригад',h1a:'6 натискань.',h1b:'Ціна готова.',lead:'Швидкий кошторис для кухонь, санвузлів і монтажу. Ціна на місці, поки клієнт ще стоїть поруч.',start:'Почати безкоштовно',seeSample:'Дивитись приклад',t1:'Без акаунта',t2:'Працює офлайн',t3:'Дані лишаються на телефоні',qrTitle:'Відкрий на телефоні',qrSub:'Наведи камеру на код',
+howK:'Як це працює',howH:'Натиснув, натиснув, ціна',howSub:'Одне питання на екран. Ціна оновлюється по ходу.',
+s1h:'Обери рівень',s1p:'Базовий, Стандарт або Розширений. Малюнок кухні змінюється разом з ним.',s2h:'Задай розмір',s2p:'Довжина, верхні шафи, колони, стільниця, монтаж. Шість натискань на кухню.',s3h:'Надішли',s3p:'Повідомлення з однією ціною йде клієнту у WhatsApp, або PDF з твоєю назвою.',
+repK:'Приклад',repH:'Що отримує клієнт',repSub:'Екран результату і повідомлення, що йде у WhatsApp.',r1:'Одна ціна і вилка, без таблиці',r2:'Примітка, що ціна приблизна',r3:'PDF з назвою фірми, датою, рядками і підсумком',acc:'Точність приблизно 15–20 %. Це інструмент для розмови, не остаточна пропозиція.',
+flK:'Всередині',flH:'Три сценарії, один застосунок',flSub:'Кухня, санвузол і монтаж готові до роботи. Спочатку твої ціни.',p1h:'Кухня',p1p:'Шість натискань. Ціна за погонний метр, малюнок змінюється одразу.',p2h:'Санвузол',p2p:'Три натискання. За м² підлоги плюс сантехніка.',p3h:'Власний список',p3p:'Додавай позиції: назва, кількість, ціна. Отримуй підсумок і PDF.',
+faqH:'Питання',q1:'Скільки це коштує?',a1:'Нічого. Без акаунта, підписки та реклами.',q2:'Наскільки точна ціна?',a2:'Приблизно 15–20 %. Для кухні за замовчуванням показана вилка ±15 %, а в повідомленні клієнту написано, що ціна приблизна.',q3:'Де мої дані?',a3:'Лише у твоєму браузері. Ціни та збережені кошториси нікуди не надсилаються.',q4:'Чи потрібен інтернет?',a4:'Лише при першому візиті. Далі працює офлайн. Англійська, португальська, російська та українська.',
+finH:'Наступний клієнт. Перша ціна.',finP:'Відкрий на телефоні й додай на головний екран. Десять секунд.',finBtn:'Відкрити Sixtap',foot1:'© Давид Медведчук',foot2:'MIT'}
 };
-const HTMLLANG={en:'en',pt:'pt',ru:'ru',ua:'uk'};
+const HL={en:'en',pt:'pt',ru:'ru',ua:'uk'};
 function setLang(l){
-  document.documentElement.lang=HTMLLANG[l];
+  document.documentElement.lang=HL[l];
   document.querySelectorAll('[data-t]').forEach(e=>{const v=T[l][e.dataset.t];if(v!=null)e.textContent=v});
   document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l));
   try{localStorage.setItem('sixtap-about-lang',l)}catch(e){}
